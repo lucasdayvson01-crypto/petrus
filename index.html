@@ -70,6 +70,14 @@ h1 em{font-family:"Instrument Serif",Georgia,"Times New Roman",serif;font-style:
 .scroll svg{width:11px;height:11px;animation:bob 2s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(3px)}}
 
+/* capa nova: foto dentro de um cartao arredondado sobre fundo claro (ref. BloomFi) */
+body{background:radial-gradient(900px 560px at 100% 0,rgba(218,221,216,.8),transparent 70%),var(--bg)}
+.hero{margin:84px 16px 0;min-height:calc(100svh - 100px);border-radius:40px;padding:96px 28px 110px;box-shadow:0 40px 80px -50px rgba(28,28,28,.55)}
+.hero .scroll{bottom:22px}
+.hero .badge{background:rgba(250,250,255,.22)}
+.pill{top:16px}
+@media (max-width:620px){.hero{margin:76px 10px 0;border-radius:30px;padding:80px 20px 100px}}
+
 /* abaixo: claro, compacto, com respiro */
 section{padding:clamp(64px,9vw,110px) 0}
 .wrap{width:min(1040px,100% - 56px);margin:0 auto}
