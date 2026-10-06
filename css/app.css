@@ -923,6 +923,74 @@ body.tophover .wrap{padding-top:78px!important}
 .pdica b{display:block;font-size:15px;margin-bottom:4px}
 .pdica p{margin:0 0 6px;font-size:14.5px;line-height:1.5}
 .pdica small{display:block;color:var(--mut);font-size:12px}
+/* ===== Curso do Petrus (cérebro de professor) ===== */
+.curso .lstep{max-width:none}
+.cpg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.cpc{display:grid;gap:6px;padding:16px 18px;border-radius:20px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--cc,var(--orange));text-decoration:none;color:var(--ink);transition:transform .15s,box-shadow .15s}
+.cpc b{font-family:var(--disp);font-size:16px;letter-spacing:-.01em}
+@media (hover:hover){.cpc:hover{transform:translateY(-2px);box-shadow:0 14px 28px -22px rgba(14,38,25,.6)}}
+.cpi p{line-height:1.65;margin:0 0 10px;font-size:15.5px}
+.cpi p:last-child{margin-bottom:0}
+.cpb.lido{border-color:#2E8B63;box-shadow:inset 6px 0 0 #2E8B63}
+.cpb p{line-height:1.7;font-size:16px;margin:0}
+.cpb ul,.cpb ol{padding-left:22px;display:grid;gap:6px;line-height:1.6;font-size:16px}
+.rxg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.rx{display:grid;gap:8px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--paper);align-content:start}
+.rx.fx{border-color:var(--orange)}
+.rxh{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.rxh b{font-size:13.5px;line-height:1.35}
+.rxh .pill{font-size:10.5px;padding:3px 9px}
+.rxb{display:grid;gap:5px}
+.rg{border-top:1px solid var(--line);padding:10px 0}
+.rg>summary{cursor:pointer;font-weight:700;font-size:14.5px}
+.rgi{padding:12px 0 4px;display:grid;gap:6px}
+.rgh{display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.rgh b{font-size:13.5px}
+.rgt p{font-size:14px;line-height:1.6;margin:0}
+.sel{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.sel.ok{background:#E3F5EA;color:#14653C}
+.sel.ck{background:#FFF1D6;color:#8A5300}
+.sel.dv{background:#FDE3DF;color:#A32A19}
+.cln{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.cln>.pill,.cln>.btn{grid-column:1/-1;justify-self:start}
+.clq{background:var(--paper);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.5}
+.clq p{margin:4px 0 0}
+@media (max-width:640px){.cln{grid-template-columns:1fr}}
+body[data-theme=escuro] .cpc,body[data-theme=escuro] .rx,body[data-theme=escuro] .clq{background:rgba(255,255,255,.06);color:var(--peach)}
+body[data-theme=escuro] .cpc{color:var(--peach)}
+/* ===== Cronograma do curso ===== */
+.crl2{display:grid;gap:8px}
+.crt{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-left:6px solid var(--cc,var(--orange));border-radius:16px;background:var(--paper)}
+.crt.k-rev{border-left-color:#3B82F6}.crt.k-sim{border-left-color:var(--brown)}.crt.k-livre,.crt.k-correcao,.crt.k-vespera{border-left-color:#2E8B63}
+.crt.ok{opacity:.6}.crt.ok b{text-decoration:line-through}
+.crc{width:26px;height:26px;border-radius:8px;border:2px solid var(--brown);background:#fff;color:#fff;font-weight:800;cursor:pointer;display:grid;place-items:center;font-size:15px;line-height:1}
+.crt.ok .crc{background:#2E8B63;border-color:#2E8B63}
+.crb{display:grid;gap:2px;min-width:0}.crb b{font-size:14px;line-height:1.35}
+.crl{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.crx{justify-content:flex-end;gap:6px}
+@media (max-width:640px){.crt{grid-template-columns:auto 1fr}.crx{grid-column:1/-1;justify-content:flex-start}}
+.crws{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.crw{display:grid;gap:3px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+.crw.hoje{border-color:var(--orange)}
+.crm{border-top:1px solid var(--line);padding:10px 0}.crm>summary{cursor:pointer;font-weight:800;font-size:14.5px}
+.crm .crw{margin-top:8px}
+.t td .d{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle}
+body[data-theme=escuro] .crt,body[data-theme=escuro] .crw{background:rgba(255,255,255,.06);color:var(--peach)}
+.cph .tiny{color:rgba(14,38,25,.7)}
+/* ===== Livros: resumo denso do Petrus ===== */
+.cpds{display:grid;gap:8px;margin-bottom:16px}
+.cpd{border:1px solid var(--line);border-radius:16px;background:var(--card);overflow:hidden}
+.cpd>summary{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;list-style:none}
+.cpd>summary::-webkit-details-marker{display:none}
+.cpd>summary b{flex:1;font-size:15px;line-height:1.35}
+.cpn{width:28px;height:28px;border-radius:50%;background:var(--brown);color:var(--peach);font-weight:800;font-size:13px;display:grid;place-items:center;flex:none}
+.cpd.lido .cpn{background:#2E8B63;color:#fff}
+.cpd[open]>summary{border-bottom:1px solid var(--line);background:var(--paper)}
+.cpdb{padding:14px 16px}
+.cpdb p,.cpdb li{font-size:15.5px;line-height:1.7}
+.cpdr{padding:0 16px 14px}
+.cpd.intro{border-left:6px solid var(--orange)}
+body[data-theme=escuro] .cpd{background:rgba(255,255,255,.06)}
 /* Petrus (versão pública): visual claro, leve e com respiro, no mesmo estilo da capa. Paleta verde. Sem personagem e sem botões do chat. */
 :root{--font:Inter,-apple-system,"SF Pro Text","Segoe UI",system-ui,sans-serif;--disp:Inter,-apple-system,"SF Pro Display","Segoe UI",system-ui,sans-serif;--r:24px;--bg:#F4F7F4;--paper:#F4F8F4;--card:#FFFFFF;--ink:#0F2217;--mut:#5B6E62;--brown:#16382A;--orange:#2F8F6B;--peach:#DDF0E6;--dot:#D9E5DC;--line:rgba(15,34,23,.09)}
 body[data-theme=escuro]{--bg:#0A130E;--brown:#0A130E;--orange:#5BC9A0;--peach:#CFEBDD;--line:rgba(255,255,255,.1)}

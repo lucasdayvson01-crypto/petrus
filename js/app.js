@@ -222,6 +222,8 @@ const pagesOf = id => (S.pages[id] = S.pages[id] || seedPages(id));
 /* ---------- navegação ---------- */
 const NAV = [['home', 'Início'], ['mapa', 'Mapa da OAB'], ['foco', 'Foco'], ['lib', 'Biblioteca'], ['vade', 'Vade Mecum'], ['plan', 'Cronograma'], ['rev', 'Revisão'], ['sim', 'Simulados'], ['err', 'Erros'], ['petrus', 'Petrus']];
 const ICON = {
+  crono: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14l2 2 4-4"/>',
+  curso: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/>',
   cards: '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h12a2 2 0 012 2v10"/>',
   rel: '<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',
   mapa: '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
@@ -242,7 +244,7 @@ const TABCOL = [['#16161A', '#fff']];
 const PAST = ['#D6B8FF', '#FFB7B2', '#A6DEFF', '#FFCDAE', '#A8F0CE', '#F2B6E8', '#D9D9D9'];
 const MESES = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
 const WDL = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
-const TITLES = { vade: 'Vade Mecum', foco: 'Modo foco', home: 'Início', lib: 'Biblioteca', plan: 'Cronograma', rev: 'Revisão', sim: 'Simulados', err: 'Erros', petrus: 'Petrus', book: 'Livro', notas: 'Notas do aluno', config: 'Configurações', mock: 'Simulado completo', mapa: 'Mapa até a OAB', cards: 'Cartões', rel: 'Relatório' };
+const TITLES = { vade: 'Vade Mecum', foco: 'Modo foco', home: 'Início', lib: 'Biblioteca', plan: 'Cronograma', rev: 'Revisão', sim: 'Simulados', err: 'Erros', petrus: 'Petrus', book: 'Livro', notas: 'Notas do aluno', config: 'Configurações', mock: 'Simulado completo', mapa: 'Mapa até a OAB', cards: 'Cartões', rel: 'Relatório', curso: 'Curso do Petrus', crono: 'Cronograma do curso' };
 let navHidden = (() => { if (window.innerWidth < 900) return true; try { const v = localStorage.getItem('c48.nav'); if (v) return v === 'hidden'; } catch (e) { } return false; })();
 let navMat = false, navAnim = false;
 /* menu lateral: por padrão fica escondido no computador e aparece ao passar o mouse na borda esquerda; "fixo" volta ao modo antigo */
@@ -261,7 +263,7 @@ function navHtml(r) {
   const open = navMat || r.v === 'book';
   const mats = [C48].concat(MAT.slice().sort((a, b) => a.ciclo - b.ciclo)).map(m => `<a href="#/book/${m.id}" class="${r.v === 'book' && r.a === m.id ? 'on' : ''}"><i class="d" style="background:${m.id === 'c48' ? '#190A00' : PAST[m.ciclo] || PAST[0]}"></i><span>${esc(m.nome)}</span><span class="nt">${m.id === 'c48' || S.rate[m.id] == null ? '' : S.rate[m.id]}</span></a>`).join('');
   return `<div class="brand"><span class="bm">P</span>Petrus<button class="hide" data-act="navToggle" title="Esconder o menu"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button></div>
-    <div class="grp">Estudar</div><a href="index.html"><svg viewBox="0 0 24 24">${ICON.home}</svg><span>Início</span></a>${[['lib', 'Biblioteca'], ['vade', 'Vade Mecum'], ['notas', 'Notas do aluno']].map(it).join('')}
+    <div class="grp">Estudar</div><a href="index.html"><svg viewBox="0 0 24 24">${ICON.home}</svg><span>Início</span></a>${[['crono', 'Cronograma do curso'], ['curso', 'Curso do Petrus'], ['lib', 'Biblioteca'], ['vade', 'Vade Mecum'], ['notas', 'Notas do aluno']].map(it).join('')}
     <div class="grp">Treinar</div>${[['rev', 'Revisão'], ['cards', 'Cartões'], ['sim', 'Simulados'], ['err', 'Erros']].map(it).join('')}
     <div class="grp btn2 ${open ? 'open' : ''}" data-act="navMat">Matérias<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div><div class="sub2 ${open ? 'open' : ''}">${mats}</div>
     <div class="grp">Petrus</div>${[['config', 'Configurações']].map(it).join('')}
@@ -429,7 +431,7 @@ function renderCore() {
   if (r.v === 'home') { location.replace('index.html'); return; }
   if (['petrus', 'plan', 'foco', 'mapa', 'rel'].indexOf(r.v) >= 0) { location.replace('app.html#/lib'); return; }
   $('#nav').innerHTML = navHtml(r);
-  const fn = { vade: vVade, foco: vFoco, home: vHome, lib: vLib, book: () => vBook(r.a), plan: vPlan, rev: vRev, sim: vSim, err: vErr, petrus: vPetrus, notas: vNotas, config: vConfig, mock: vMock, mapa: vMapa, cards: vCards, rel: vRel }[r.v] || vHome;
+  const fn = { vade: vVade, foco: vFoco, home: vHome, lib: vLib, book: () => vBook(r.a), plan: vPlan, rev: vRev, sim: vSim, err: vErr, petrus: vPetrus, notas: vNotas, config: vConfig, mock: vMock, mapa: vMapa, cards: vCards, rel: vRel, curso: vCP, crono: vCrono }[r.v] || vHome;
   $('#app').innerHTML = topbarHtml(r) + fn();
   document.body.classList.toggle('bk', r.v === 'book'); document.body.dataset.book = r.v === 'book' ? r.a : ''; document.body.classList.toggle('wide', !!S.wide);
   if (!document.getElementById('topzone')) { const z = document.createElement('div'); z.id = 'topzone'; z.className = 'topzone'; document.body.appendChild(z); }
@@ -451,6 +453,135 @@ window.addEventListener('hashchange', () => { CUR = (location.hash || '').replac
 const bar = (p, tick, tl, thin) => `<div class="bar ${thin ? 'thin' : ''}"><i style="width:${clamp(p * 100, 0, 100)}%"></i>${tick != null ? `<b style="left:${clamp(tick * 100, 0, 100)}%" data-l="${tl}"></b>` : ''}</div>`;
 const copyBtn = (t, l, cls) => `<button class="btn ${cls || 'ghost'} sm" data-act="copy" data-t="${encodeURIComponent(t)}">${l}</button>`;
 
+/* ================== CURSO DO PETRUS (cérebro de professor) ================== */
+/* Dados: dados/cerebro.js (banco de regras, Raio-X por tema, clones, cartões; gerado de estudo-petrus\banco) e dados/curso.js (aulas escritas pelo Petrus). */
+const CER = window.C48_CEREBRO || { mats: {}, clones: [], cards: [], n: 0 }, CURP = window.C48_CURSO || {};
+const MOLDE = { etica: [1, 8], fil: [9, 10], const: [11, 16], dh: [17, 18], elei: [19, 20], int: [21, 22], fin: [23, 24], trib: [25, 29], adm: [30, 34], amb: [35, 36], civil: [37, 42], eca: [43, 44], cons: [45, 46], emp: [47, 50], pcivil: [51, 56], penal: [57, 62], ppenal: [63, 68], prev: [69, 70], trab: [71, 75], ptrab: [76, 80] };
+const molde = id => MOLDE[id] ? { de: MOLDE[id][0], ate: MOLDE[id][1], n: MOLDE[id][1] - MOLDE[id][0] + 1 } : null;
+const TIPOS_R = { regra: 'Regra', prazo: 'Prazo', quorum: 'Quórum', pegadinha: 'Pegadinha', jurisprudencia: 'Jurisprudência', mnemonico: 'Macete', metodo: 'Método', divergencia: 'Divergência', padrao: 'Padrão FGV' };
+const STAT_R = { conferido: ['ok', 'conferido na lei'], conferir: ['ck', 'conferir antes de usar'], divergente: ['dv', 'divergente: ler a lei'] };
+const cpRead = () => (S.cp = S.cp || { r: {} }).r;
+let qIds = null, qTema = '';
+function cpMatList() { return MAT.slice().sort((a, b) => a.ciclo - b.ciclo); }
+function cpProg(id) { const A = (CURP[id] || {}).blocos || [], r = cpRead(); const n = A.filter((b, i) => r[id + ':' + i]).length; return { n, tot: A.length }; }
+const cpFixo = t => t.ex.length >= 6;
+function cpQ(id) { return QR.find(q => q.id === id); }
+function cpTemaCard(id, m, i, t, mx) {
+  const ex = t.ex.join(', ');
+  return `<div class="rx ${cpFixo(t) ? 'fx' : ''}"><div class="rxh"><b>${esc(t.t)}</b>${cpFixo(t) ? '<span class="pill or">tema fixo</span>' : ''}</div>
+    <div class="rxb"><div class="bar thin"><i style="width:${Math.max(6, t.n / mx * 100)}%"></i></div><span class="tiny">${t.n} ${t.n > 1 ? 'questões' : 'questão'} · exames ${esc(ex)}</span></div>
+    <button class="btn ghost sm" data-act="cpTreino" data-m="${id}" data-i="${i}">Treinar estas ${t.n}</button></div>`;
+}
+function cpRegras(id) {
+  const rs = ((CER.mats[id] || {}).regras || []);
+  if (!rs.length) return '';
+  const ordem = ['padrao', 'pegadinha', 'regra', 'prazo', 'quorum', 'mnemonico', 'jurisprudencia', 'divergencia', 'metodo'];
+  const grupos = ordem.map(k => [k, rs.filter(r => r.k === k)]).filter(g => g[1].length);
+  const nConf = rs.filter(r => r.s === 'conferido').length;
+  return `<div class="card"><h2>Banco de regras do Petrus (${rs.length} · ${nConf} conferidas na lei)</h2>
+    <p class="muted" style="font-size:13px;margin-bottom:12px">Cada regra foi lida no texto da lei. O selo mostra se ainda precisa de conferência: use o que está <b>conferido</b> com segurança e leia a lei antes de afirmar o que estiver em <b>conferir</b>.</p>
+    ${grupos.map(([k, l]) => `<details class="rg"><summary>${TIPOS_R[k] || k} <span class="tiny">(${l.length})</span></summary>${l.map(r => { const st = STAT_R[r.s] || STAT_R.conferir; return `<div class="rgi"><div class="rgh"><b>${esc(r.t)}</b><span class="sel ${st[0]}" title="${st[1]}">${st[1]}</span></div><div class="rgt">${mdRich(r.e)}</div>${r.b ? `<div class="tiny">Base legal: ${esc(r.b)}${r.x ? ' · exame(s): ' + esc(r.x) : ''}</div>` : ''}${r.o ? `<div class="tiny">Nota do Petrus: ${esc(r.o)}</div>` : ''}</div>`; }).join('')}</details>`).join('')}</div>`;
+}
+function vCP() {
+  const r = route();
+  if (r.a === 'fgv') return vCPAula0();
+  if (r.a && MAT.find(m => m.id === r.a)) return vCPMat(r.a);
+  const tot = Object.values(CER.mats).reduce((s, m) => s + m.regras.length, 0);
+  const lista = cpMatList().map(m => {
+    const c = CER.mats[m.id] || { regras: [], temas: [] }, p = cpProg(m.id), mo = molde(m.id), fx = c.temas.filter(cpFixo).length, temAula = (CURP[m.id] || {}).blocos;
+    return `<a class="cpc" href="#/curso/${m.id}" style="--cc:${m.cor}"><b>${esc(m.nome)}</b><span class="tiny">${mo ? mo.n + (mo.n > 1 ? ' questões' : ' questão') + ' por prova (Q' + mo.de + (mo.n > 1 ? '–' + mo.ate : '') + ')' : ''}</span>
+      <span class="tiny">${temAula ? p.n + ' de ' + p.tot + ' blocos lidos' : 'aula em preparo'} · ${fx} ${fx === 1 ? 'tema fixo' : 'temas fixos'} · ${c.regras.length} regras</span>${temAula ? bar(p.tot ? p.n / p.tot : 0, null, '', true) : ''}</a>`;
+  }).join('');
+  return `<div class="top"><div><h1>Curso do <em>Petrus</em></h1><p class="sub">O curso inteiro do Petrus, feito para você: resumo didático, o que a FGV mais cobra, as pegadinhas de cada tema e treino com as questões reais. Começa pela Aula 0 e depois segue a ordem que o seu diagnóstico pediu.</p></div></div>
+    <div class="curso"><div class="card dark"><h2>Aula 0</h2><h1 style="font-size:26px;margin:0 0 8px">Como a FGV <em>pensa</em></h1><p style="margin:0 0 14px;line-height:1.6">O que 640 questões dos exames 40 a 47 ensinam: o que não adianta decorar, o molde fixo da prova, as questões que se repetem e a estratégia dos 40 acertos.</p><a class="btn" href="#/curso/fgv" style="text-decoration:none">Abrir a Aula 0</a></div>
+    <div><h2>Matérias, na ordem do seu diagnóstico</h2><div class="cpg">${lista}</div></div>
+    <div class="grid g2"><div class="card cream"><h2>Cartões do banco</h2><p style="margin:0 0 12px;line-height:1.55">${CER.cards.length} cartões de regras e pegadinhas conferidas na lei, para revisar sem abrir o livro.</p><button class="btn sm" data-act="cardSrc" data-s="cerebro">Abrir os cartões</button></div>
+      <div class="card"><h2>O cérebro do Petrus</h2><p style="margin:0;line-height:1.55">${tot} regras em 20 matérias, ${(window.C48_QR || []).length} questões reais classificadas por tema e as questões que a FGV repete. Gerado em ${esc(CER.gerado || '')}.</p></div></div></div>`;
+}
+function vCPMat(id) {
+  const m = MAT.find(x => x.id === id), c = CER.mats[id] || { regras: [], temas: [] }, A = CURP[id], mo = molde(id), rd = cpRead();
+  const mx = Math.max(1, ...c.temas.map(t => t.n)), nq = c.temas.reduce((s, t) => s + t.n, 0);
+  const temaIdx = n => c.temas.findIndex(t => t.t === n);
+  const raiox = c.temas.length ? `<div class="card"><h2>Raio-X: o que a FGV cobrou em ${esc(m.nome)}</h2><p class="muted" style="font-size:13px;margin-bottom:12px">${nq} questões reais dos exames 40 a 47${mo ? ' (sempre as questões ' + mo.de + (mo.n > 1 ? ' a ' + mo.ate : '') + ' da prova)' : ''}, classificadas por tema pelo Petrus. <b>Tema fixo</b> = apareceu em 6 ou mais das 8 provas.</p><div class="rxg">${c.temas.map((t, i) => cpTemaCard(id, m, i, t, mx)).join('')}</div></div>` : '';
+  const blocos = A && A.blocos.length ? A.blocos.map((b, i) => {
+    const ti = b.tema ? temaIdx(b.tema) : -1, t = ti >= 0 ? c.temas[ti] : null, key = id + ':' + i, lido = !!rd[key];
+    return `<div class="lstep cpb ${lido ? 'lido' : ''}"><h2>${i + 1}. ${esc(b.t)}</h2>${t ? `<div class="row"><span class="pill cream">${t.n} ${t.n > 1 ? 'questões' : 'questão'} · exames ${esc(t.ex.join(', '))}</span>${cpFixo(t) ? '<span class="pill or">tema fixo</span>' : ''}</div>` : ''}${mdRich(b.x)}
+      <div class="row">${t ? `<button class="btn ghost sm" data-act="cpTreino" data-m="${id}" data-i="${ti}">Treinar as ${t.n} questões reais</button>` : ''}<button class="btn sm ${lido ? 'ghost' : ''}" data-act="cpLido" data-k="${key}">${lido ? 'Lido (desmarcar)' : 'Marcar como lido'}</button></div></div>`;
+  }).join('') : '<div class="card cream"><h2>Aula em preparo</h2><p style="margin:0;line-height:1.55">O Petrus ainda está escrevendo a aula desta matéria. Enquanto isso, use o Raio-X acima para treinar os temas que mais caem e o banco de regras abaixo.</p></div>';
+  const p = cpProg(id);
+  return `<div class="top"><div><a class="tiny" href="#/curso">← Curso do Petrus</a><h1>${esc(m.nome)}</h1><p class="sub">${mo ? 'Na prova são ' + mo.n + (mo.n > 1 ? ' questões' : ' questão') + ' (Q' + mo.de + (mo.n > 1 ? ' a Q' + mo.ate : '') + ').' : ''} ${A ? p.n + ' de ' + p.tot + ' blocos lidos.' : ''}</p></div><a class="btn ghost sm" href="#/book/${id}" style="text-decoration:none">Abrir o livro de ${esc(m.nome)}</a></div>
+    <div class="curso">${A && A.intro ? `<div class="card cream cpi">${mdRich(A.intro)}</div>` : ''}${raiox}${blocos}${cpRegras(id)}</div>`;
+}
+/* livro (Biblioteca): resumo denso do Petrus por tema, do que mais cai para o que menos cai, com treino e banco de regras */
+const CPOPEN = new Set();
+document.addEventListener('toggle', e => { const d = e.target; if (d && d.classList && d.classList.contains('cpd')) { if (d.open) CPOPEN.add(d.dataset.k); else CPOPEN.delete(d.dataset.k); } }, true);
+function cpLivro(m) {
+  const id = m.id, A = CURP[id]; if (!A || !A.blocos || !A.blocos.length) return '';
+  const c = CER.mats[id] || { regras: [], temas: [] }, rd = cpRead(), p = cpProg(id), mo = molde(id);
+  const itens = A.blocos.map((b, i) => {
+    const ti = b.tema ? c.temas.findIndex(t => t.t === b.tema) : -1, t = ti >= 0 ? c.temas[ti] : null, key = id + ':' + i, lido = !!rd[key];
+    return `<details class="cpd ${lido ? 'lido' : ''}" data-k="${key}" ${CPOPEN.has(key) ? 'open' : ''}><summary><span class="cpn">${lido ? '✓' : i + 1}</span><b>${esc(b.t)}</b>${t ? `<span class="tiny">${t.n} ${t.n > 1 ? 'questões' : 'questão'}${cpFixo(t) ? ' · tema fixo' : ''}</span>` : ''}</summary>
+      <div class="cpdb prose">${mdRich(b.x)}</div><div class="row cpdr">${t ? `<button class="btn ghost sm" data-act="cpTreino" data-m="${id}" data-i="${ti}">Treinar as ${t.n} questões reais</button>` : ''}<button class="btn sm ${lido ? 'ghost' : ''}" data-act="cpLido" data-k="${key}">${lido ? 'Lido (desmarcar)' : 'Marcar como lido'}</button></div></details>`;
+  }).join('');
+  return `<h2 class="sh">Resumo denso do Petrus</h2><p class="muted" style="margin:-4px 0 12px;font-size:13.5px;line-height:1.5">${mo ? `Na prova são ${mo.n} ${mo.n > 1 ? 'questões' : 'questão'} de ${esc(m.nome)}. ` : ''}Os blocos abaixo vão do tema que mais cai para o que menos cai, com quadros, pegadinhas da FGV e treino das questões reais. ${p.n} de ${p.tot} lidos. <a href="#/curso/${id}">Abrir no Curso do Petrus</a> · <a href="#/crono">Ver no cronograma</a>.</p>
+    ${A.intro ? `<details class="cpd intro" data-k="${id}:intro" ${CPOPEN.has(id + ':intro') ? 'open' : ''}><summary><span class="cpn">★</span><b>Por que esta matéria importa na prova</b></summary><div class="cpdb prose">${mdRich(A.intro)}</div></details>` : ''}
+    <div class="cpds">${itens}</div>${cpRegras(id)}`;
+}
+/* cartão da tela inicial: próxima aula do Curso do Petrus (Aula 0 primeiro, depois a ordem do diagnóstico) */
+function cpHomeHtml() {
+  try {
+    const CR = window.C48_CRONO; if (!CR) return '';
+    const hj = crDia(), dia = CR.dias[hj], ts = dia.tarefas.filter(t => crContaTarefa(t)), feitas = ts.filter((t, i) => crFeita(hj, dia.tarefas.indexOf(t))).length, atras = crAtrasadas().length;
+    const top = ts.filter(t => ['novo', 'rev', 'bateria', 'reforco', 'revgeral', 'correcao'].includes(t.k)).slice(0, 3).map(t => crRotulo(t) + ': ' + crNomeTarefa(t));
+    return `<div class="card cream cph"><h2>Hoje no cronograma · ${fmt(hj)}</h2><div class="row" style="justify-content:space-between;align-items:flex-end;gap:14px"><div style="min-width:0"><b style="font-size:17px">${dia.min} min de estudo (${dia.janela})</b><div class="tiny" style="margin-top:4px">${feitas} de ${ts.length} tarefas feitas${atras ? ` · <b style="color:#B93A22">${atras} atrasadas</b>` : ''}</div><div class="tiny" style="margin-top:4px">${top.map(esc).join(' · ')}</div></div><a class="btn sm" href="#/crono" style="text-decoration:none">Abrir o cronograma</a></div></div>`;
+  } catch (e) { return ''; }
+}
+/* ---------- Cronograma do curso (dados/cronograma.js, gerado por tools/montar-cronograma.ps1) ---------- */
+const crTk = () => (S.cp = S.cp || { r: {} }).tk = (S.cp.tk || {});
+const crRv = () => (S.cp = S.cp || { r: {} }).rv = (S.cp.rv || {});
+function crDia(d) { const CR = window.C48_CRONO, t = d || today(); return t < CR.inicio ? CR.inicio : t > CR.fim ? CR.fim : t; }
+const crContaTarefa = t => !['livre', 'sim'].includes(t.k) || t.k === 'livre' && false;
+const crMat = id => id === 'fgv' ? { id: 'fgv', nome: 'Aula 0', cor: '#FF6D29' } : (MAT.find(m => m.id === id) || { id, nome: id, cor: '#888' });
+function crRotulo(t) { return { novo: 'Aula nova', rev: 'Revisão D' + t.n, bateria: 'Bateria', reforco: 'Reforço', revgeral: 'Revisão geral', correcao: 'Correção', sim: 'Simulado', livre: 'Questões e erros', vespera: 'Véspera' }[t.k] || t.k; }
+function crNomeTarefa(t) { const m = t.mat ? crMat(t.mat).nome : ''; return ['novo', 'rev', 'reforco'].includes(t.k) ? m + ' · ' + t.t : t.k === 'bateria' || t.k === 'revgeral' ? m : t.t; }
+const crFeita = (d, i) => !!crTk()[d + '|' + i];
+function crAtrasadas() {
+  const CR = window.C48_CRONO, hj = crDia(), out = [];
+  Object.keys(CR.dias).filter(d => d < hj).forEach(d => CR.dias[d].tarefas.forEach((t, i) => { if (!['livre', 'sim'].includes(t.k) && !crFeita(d, i)) out.push({ d, i, t }); }));
+  return out;
+}
+function crTarefaHtml(d, i, t) {
+  const f = crFeita(d, i), m = t.mat ? crMat(t.mat) : null, link = ['novo', 'reforco'].includes(t.k) && t.mat ? `<a class="btn ghost sm" href="#/curso/${t.mat}" style="text-decoration:none">Abrir a aula</a>` : t.k === 'rev' && t.mat ? `<a class="btn ghost sm" href="#/curso/${t.mat}" style="text-decoration:none">Rever</a>` : '';
+  const trein = ['novo', 'reforco'].includes(t.k) && t.n ? `<button class="btn ghost sm" data-act="crTreino" data-k="${esc(t.key)}">Treinar ${t.n}</button>` : t.k === 'bateria' ? `<button class="btn ghost sm" data-act="crBateria" data-m="${t.mat}">Treinar 10</button>` : t.k === 'sim' ? '<a class="btn ghost sm" href="#/mock" style="text-decoration:none">Montar o simulado</a>' : t.k === 'livre' || t.k === 'correcao' ? '<a class="btn ghost sm" href="#/err" style="text-decoration:none">Caderno de erros</a>' : '';
+  return `<div class="crt ${f ? 'ok' : ''} k-${t.k}" ${m ? `style="--cc:${m.cor}"` : ''}><button class="crc" data-act="crFeito" data-d="${d}" data-i="${i}" aria-label="Marcar como feito">${f ? '✓' : ''}</button><div class="crb"><span class="crl">${esc(crRotulo(t))}${t.k !== 'sim' ? ' · ' + t.min + ' min' : ' · ' + (t.min / 60) + ' h'}</span><b>${esc(crNomeTarefa(t))}</b></div><div class="row crx">${link}${trein}</div></div>`;
+}
+function vCrono() {
+  const CR = window.C48_CRONO; if (!CR) return '<div class="top"><div><h1>Cronograma</h1></div></div><p>Cronograma não encontrado.</p>';
+  const hj = crDia(), dia = CR.dias[hj], atras = crAtrasadas(), dProva = Math.max(0, Math.ceil((new Date(CR.prova + 'T13:00:00') - new Date()) / 864e5));
+  const hojeLista = dia.tarefas.map((t, i) => [t, i]).filter(([t]) => t.k !== 'sim' || true).map(([t, i]) => crTarefaHtml(hj, i, t)).join('');
+  const prox = Object.keys(CR.dias).filter(d => d > hj).slice(0, 7).map(d => { const D = CR.dias[d], nv = D.tarefas.filter(t => t.k === 'novo').length, rv = D.tarefas.filter(t => t.k === 'rev').length, sim = D.tarefas.find(t => t.k === 'sim'); const nomes = [...new Set(D.tarefas.filter(t => ['novo', 'reforco', 'revgeral'].includes(t.k) && t.mat).map(t => crMat(t.mat).nome))].slice(0, 3).join(', ');
+    return `<div class="crw"><b>${fmt(d)} · ${WD[parse(d).getDay()]}</b><span class="tiny">${D.min} min · ${D.janela}</span><span class="tiny">${nv ? nv + ' aula(s) nova(s) · ' : ''}${rv} revisões${sim ? ' · ' + crRotulo(sim) : ''}</span><span class="tiny">${esc(nomes)}</span></div>`; }).join('');
+  const totMin = CR.materias.reduce((s, m) => s + m.minTotal, 0), totMinimo = CR.materias.reduce((s, m) => s + m.minMinimo, 0);
+  const tab = CR.materias.map(m => { const mo = molde(m.id), cor = crMat(m.id).cor; return `<tr><td><i class="d" style="background:${cor}"></i>${esc(m.nome)}</td><td>${m.q || ''}</td><td>${m.nota < 0 ? '' : m.nota}</td><td>${m.blocos} <span class="tiny">(${m.ess} essenciais)</span></td><td><b>${(m.minMinimo / 60).toFixed(1)} h</b></td><td>${(m.minTotal / 60).toFixed(1)} h</td><td class="tiny">${fmt(m.ini)} a ${fmt(m.fim)}</td></tr>`; }).join('');
+  const meses = {}; Object.keys(CR.dias).forEach(d => { (meses[d.slice(0, 7)] = meses[d.slice(0, 7)] || []).push(d); });
+  const cal = Object.keys(meses).map(k => `<details class="crm"><summary>${MESES[Number(k.slice(5)) - 1]} ${k.slice(0, 4)}</summary>${meses[k].map(d => { const D = CR.dias[d], nomes = [...new Set(D.tarefas.filter(t => ['novo', 'reforco', 'revgeral'].includes(t.k) && t.mat).map(t => crMat(t.mat).nome))].join(', '); const sim = D.tarefas.find(t => t.k === 'sim'); return `<div class="crw ${d === hj ? 'hoje' : ''}"><b>${fmt(d)} · ${WD[parse(d).getDay()]}</b><span class="tiny">${D.min} min · ${esc(D.fase)}${sim ? ' · ' + crRotulo(sim) : ''}</span><span>${esc(nomes || (D.fase === 'reta-final' ? 'revisão geral' : 'revisões e questões'))}</span></div>`; }).join('')}</details>`).join('');
+  return `<div class="top"><div><h1>Cronograma do <em>curso</em></h1><p class="sub">Até a prova de <b>10/01/2027</b> (${dProva} dias). Método: cada aula estudada volta em <b>D1, D2, D7, D14 e D30</b>. A ordem é pelo que mais cai e pelo que você mais precisa. Janelas de estudo da sua rotina, mínimo de 2 horas por dia.</p></div></div>
+  <div class="curso">
+  <div class="card"><h2>Hoje · ${fmt(hj)} ${WD[parse(hj).getDay()]} · ${dia.min} min (${dia.janela})</h2><div class="crl2">${hojeLista || '<p class="muted">Sem tarefas hoje.</p>'}</div></div>
+  ${atras.length ? `<div class="card or"><h2>Atrasadas (${atras.length})</h2><p style="margin:0 0 10px;line-height:1.5">Faça primeiro as <b>revisões</b> atrasadas e as aulas <b>essenciais</b>; os blocos complementares ficam por último. O Petrus não esquece nada: nada foi perdido.</p><div class="crl2">${atras.slice(0, 10).map(a => crTarefaHtml(a.d, a.i, a.t)).join('')}</div>${atras.length > 10 ? `<p class="tiny">E mais ${atras.length - 10} tarefas atrasadas.</p>` : ''}</div>` : ''}
+  <div class="card"><h2>Próximos 7 dias</h2><div class="crws">${prox}</div></div>
+  <div class="card"><h2>Horas mínimas por matéria (total do plano: ${(totMin / 60).toFixed(0)} h; só o essencial: ${(totMinimo / 60).toFixed(0)} h)</h2><p class="muted" style="font-size:13px;margin-bottom:10px">"Mínimo" = aulas essenciais (tema fixo ou 4+ questões nas 8 provas) + as revisões D1 a D30 delas + a bateria. "Plano" inclui tudo, com reforço. Se atrasar, corte primeiro os blocos complementares, nunca as revisões.</p><div class="scroll"><table class="t"><tr><th>Matéria</th><th>Q/prova</th><th>Sua nota</th><th>Blocos</th><th>Mínimo</th><th>Plano</th><th>Período</th></tr>${tab}</table></div></div>
+  <div class="card cream"><h2>Marcos</h2><div class="list"><div>07 a 20/10: arranque leve (TCC dia 20): Aula 0, Ética e Administrativo</div><div>25/10 a 03/01: simulado aos domingos, correção na segunda</div><div>26/11 a 02/12 (P2) e 10 a 16/12 (P3): só revisões e questões</div><div>até 08/12: todo o conteúdo novo; depois, reforço por tema</div><div>04 a 09/01: revisão geral por matéria, sem conteúdo novo; 09/01 véspera leve</div><div><b>10/01: 1ª fase (13h às 18h)</b></div></div></div>
+  <div class="card"><h2>Calendário completo</h2>${cal}</div>
+  </div>`;
+}
+function vCPAula0() {
+  const A = CURP.fgv, rd = cpRead();
+  const par = (CER.clones || []).map(c => { const a = cpQ(c.a), b = cpQ(c.b); if (!a || !b) return ''; const ex = q => q.exame + ' · questão ' + q.num; return `<div class="cln"><span class="pill cream">${esc(c.m)}</span><div class="clq"><b>${esc(ex(a))}</b><p>${esc(a.enun.slice(0, 220))}…</p></div><div class="clq"><b>${esc(ex(b))}</b><p>${esc(b.enun.slice(0, 220))}…</p></div><button class="btn ghost sm" data-act="cpClone" data-a="${c.a}" data-b="${c.b}">Treinar as duas</button></div>`; }).join('');
+  const blocos = A ? A.blocos.map((b, i) => { const key = 'fgv:' + i, lido = !!rd[key]; return `<div class="lstep cpb ${lido ? 'lido' : ''}"><h2>${i + 1}. ${esc(b.t)}</h2>${mdRich(b.x)}<div class="row"><button class="btn sm ${lido ? 'ghost' : ''}" data-act="cpLido" data-k="${key}">${lido ? 'Lido (desmarcar)' : 'Marcar como lido'}</button></div></div>`; }).join('') : '<div class="card cream"><h2>Aula em preparo</h2></div>';
+  return `<div class="top"><div><a class="tiny" href="#/curso">← Curso do Petrus</a><h1>Aula 0: como a FGV <em>pensa</em></h1><p class="sub">Base: as 640 questões dos exames 40 a 47, todas lidas e classificadas pelo Petrus.</p></div></div>
+    <div class="curso">${A && A.intro ? `<div class="card cream cpi">${mdRich(A.intro)}</div>` : ''}${blocos}${par ? `<div class="card"><h2>Questões que se repetem (pares quase iguais)</h2><p class="muted" style="font-size:13px;margin-bottom:12px">A FGV reaproveita a mesma regra com personagens novos. Leia os pares lado a lado e responda: o que mudou? O que ficou igual?</p>${par}</div>` : ''}</div>`;
+}
 /* ================== INÍCIO ================== */
 /* Petrus 3D (2ª versão, baseado na foto de referência): professor de óculos retangulares, cabelo bagunçado, nariz grande,
    bigode e barba por fazer, suéter verde com zíper. O corpo fica dentro de um disco redondo e a cabeça sai para fora dele.
@@ -595,6 +726,7 @@ function vHome() {
   ${petrusHero(mt, meta, dProva, due.length)}
   ${cobra}
   ${hojeAulaHtml()}
+  ${cpHomeHtml()}
   <div class="hsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="hq" placeholder="Pesquisar temas, aulas, minhas páginas, notas e leis" autocomplete="off" value="${esc(hqQ)}"><div id="hqres">${hqHtml(hqQ)}</div></div>
   <div class="hero">
     <div class="datecard">
@@ -1110,7 +1242,7 @@ function nlmText(m) {
   return `<div class="curso"><div class="chero" style="--mc:${m.cor}"><div class="tiny">CURSO</div><h1>${esc(m.nome)}</h1><p class="lead">${esc(f)}</p>${peso(m).n ? `<span class="tiny" style="text-transform:none;letter-spacing:0">No banco de ${QR.length} questões reais, ${peso(m).n} (${peso(m).p}%) são desta matéria.</span>` : ''}
     <div class="cprog"><div class="bar"><i style="width:${us.length ? done / us.length * 100 : 0}%"></i></div><span>${done} de ${us.length} aulas concluídas</span></div>
     ${nxt && AULA()[nxt.k] ? `<button class="btn" data-act="bkOpen" data-k="${nxt.k}">${done ? 'Continuar' : 'Começar'}: ${esc(nxt.u)}</button>` : ''}</div>
-    <h2 class="sh">Trilha de aulas</h2><div class="ctrail">${cards}</div>${fgvRaioX(m)}
+    <h2 class="sh">Trilha de aulas</h2><div class="ctrail">${cards}</div>${fgvRaioX(m)}${cpLivro(m)}
     ${E ? `<h2 class="sh">Para assistir e ler</h2><div class="aulas">${E.aulas.map(aulaHtml).join('')}</div><div class="row" style="margin-top:8px">${E.leis.map(leiBtn).join('')}</div>` : ''}
     <div class="row" style="margin-top:22px"><button class="btn ghost sm" data-act="bkResumo">Resumo de véspera da matéria</button><button class="btn ghost sm" data-act="bkMode" data-id="${m.id}" data-v="caderno">Abrir meu caderno de anotações deste livro</button><button class="btn ghost sm" data-act="nlmExport" data-id="${m.id}">Exportar para o NotebookLM</button><a class="btn ghost sm" href="https://notebooklm.google.com" target="_blank" rel="noopener">Abrir o NotebookLM</a><a class="btn ghost sm" href="#/lib">Voltar à biblioteca</a></div></div>`;
 }
@@ -1170,18 +1302,25 @@ function bkCards(A, title) {
   A.sec.forEach(s => s.x.split(/\n{2,}/).forEach(b => { const c = ['Pegadinha', 'Como fixar', 'Diferença-chave', 'Importante'].find(n => b.startsWith('**' + n)); if (c) out.push({ f: (c === 'Pegadinha' ? 'Qual é a pegadinha? ' : 'Como fixar: ') + '(' + s.t.replace(/^Desenvolvimento \d+: /, '') + ')', b: b.replace(/^\*\*[^*]+\*\*:?\s*/, '').replace(/\*\*/g, ''), t: title }); }));
   return out;
 }
-const CARD = { deck: null, i: 0, show: false };
+const CARD = { deck: null, i: 0, show: false, src: 'aulas' };
 function cardDeck() {
   if (CARD.deck) return CARD.deck;
+  if (CARD.src === 'cerebro') {
+    const nome = id => (MAT.find(x => x.id === id) || { nome: id }).nome;
+    const base = (CER.cards || []).map(c => ({ m: nome(c.m), t: TIPOS_R[c.k] || c.k, f: c.t, b: c.e + (c.b ? ' (' + c.b + ')' : '') }));
+    CARD.deck = base.map(c => [Math.random(), c]).sort((a, b) => a[0] - b[0]).map(x => x[1]); return CARD.deck;
+  }
   const all = []; QUEUE.forEach(x => { const A = AULA()[x.k]; if (A) bkCards(A, x.u).forEach(c => all.push(Object.assign(c, { done: isDone(x.k), m: x.m.nome }))); });
   const base = all.some(c => c.done) ? all.filter(c => c.done) : all;
   CARD.deck = base.map(c => [Math.random(), c]).sort((a, b) => a[0] - b[0]).map(x => x[1]); return CARD.deck;
 }
 function vCards() {
-  const d = cardDeck(); if (!d.length) return '<div class="top"><div><h1>Cartões</h1></div></div><p>Conclua uma aula para gerar cartões.</p>';
+  const d = cardDeck();
+  const src = `<div class="row" style="margin-bottom:14px"><button class="chip ${CARD.src !== 'cerebro' ? 'on' : ''}" data-act="cardSrc" data-s="aulas">Das minhas aulas</button><button class="chip ${CARD.src === 'cerebro' ? 'on' : ''}" data-act="cardSrc" data-s="cerebro">Banco do Petrus (${(CER.cards || []).length})</button></div>`;
+  if (!d.length) return `<div class="top"><div><h1>Cartões</h1></div></div><div class="curso">${src}<p>Conclua uma aula para gerar cartões.</p></div>`;
   const c = d[CARD.i % d.length];
-  return `<div class="top"><div><h1>Cartões de <em>revisão</em></h1><p class="sub">Pegadinhas e pontos de fixação das aulas que você estudou. Tente responder antes de virar o cartão.</p></div></div>
-    <div class="curso"><div class="fcard ${CARD.show ? 'on' : ''}" data-act="cardShow"><span class="tiny">${esc(c.m)} · ${esc(c.t)}</span><h2>${esc(c.f)}</h2>${CARD.show ? `<p>${esc(c.b)}</p>` : '<p class="muted">Toque para ver a resposta</p>'}</div>
+  return `<div class="top"><div><h1>Cartões de <em>revisão</em></h1><p class="sub">${CARD.src === 'cerebro' ? 'Regras e pegadinhas conferidas na lei pelo Petrus.' : 'Pegadinhas e pontos de fixação das aulas que você estudou.'} Tente responder antes de virar o cartão.</p></div></div>
+    <div class="curso">${src}<div class="fcard ${CARD.show ? 'on' : ''}" data-act="cardShow"><span class="tiny">${esc(c.m)} · ${esc(c.t)}</span><h2>${esc(c.f)}</h2>${CARD.show ? `<p>${esc(c.b)}</p>` : '<p class="muted">Toque para ver a resposta</p>'}</div>
     <div class="row">${CARD.show ? '<button class="btn ghost" data-act="cardMiss">Errei, mostre de novo logo</button><button class="btn" data-act="cardNext">Acertei, próximo</button>' : '<button class="btn" data-act="cardShow">Virar o cartão</button>'}<span class="tiny">${CARD.i % d.length + 1} de ${d.length}</span></div></div>`;
 }
 function vRel() {
@@ -1366,7 +1505,7 @@ function vPlan() {
     ['Domingo', 'Estudo 09h às 13h. Simulado 13h às 18h nas datas marcadas.', 'Livre', 'Revisão semanal, lei seca, ajuste do plano']
   ];
   const hist = Math.min(...[...Object.keys(S.hours)].map(d => d).concat(START));
-  return `<div class="top"><div><h1>Crono<em>grama</em></h1><p class="sub">Esboço até o Lucas aprovar. Falta calibrar com o diagnóstico completo.</p></div></div>
+  return `<div class="top"><div><h1>Crono<em>grama</em></h1><p class="sub">Visão geral do plano (fases e agenda). O cronograma dia a dia do curso, com revisões D1, D2, D7, D14 e D30, está em <a href="#/crono"><b>Cronograma do curso</b></a>.</p></div><a class="btn" href="#/crono" style="text-decoration:none">Abrir o cronograma do curso</a></div>
   <div class="grid g3" style="margin-bottom:16px">
     <div class="card or"><h2>Prazo final</h2><div class="big">${dProva}<small>dias</small></div><p class="tiny" style="margin-top:8px">1ª fase: domingo, 10/01/2027, 13h às 18h.</p></div>
     <div class="card"><h2>Meta mínima</h2><div class="big">2<small>h por dia, todos os dias</small></div><p class="tiny" style="margin-top:8px">Dia ruim: 30 min (D1, D2 e 5 questões). Não zere a sequência.</p></div>
@@ -1451,6 +1590,7 @@ function vSim() {
     <p class="muted" style="font-size:13px;margin-bottom:12px">${nQR} questões dos exames 40º a 47º, extraídas dos cadernos oficiais e conferidas com os gabaritos (42º ainda com gabarito preliminar; questões anuladas ficam de fora). A FGV não rotula a matéria no caderno: a matéria de cada questão foi <b>inferida pelo Petrus</b> (posição no molde da prova e tema do enunciado), e uma questão de fronteira pode estar na matéria vizinha. Você também pode colar questões de outras provas abaixo.</p>
     <div class="duebox"><b>${dueQs().length ? dueQs().length + (dueQs().length > 1 ? ' questões' : ' questão') + ' para rever hoje' : 'Nenhuma questão vencida hoje'}</b><span class="tiny">Quem você acertou volta em cerca de 1, 3, 7, 16, 35 e 70 dias, e o prazo se ajusta ao seu acerto na matéria e aos seus erros naquela questão. Quem você errou volta amanhã.</span>${dueQs().length ? '<button class="btn sm" data-act="qDue">Rever agora</button>' : ''}</div>
     <div class="row" style="margin-bottom:12px"><select id="qex" style="max-width:160px"><option value="">Todos os exames</option>${exOpts}</select><select id="qmat" style="max-width:240px"><option value="">Todas as matérias</option><option>Não classificada</option>${matOpts}</select><button class="btn sm" data-act="qStart">Treinar questão</button><span class="tiny">Meta: 10 por dia</span></div>
+    ${qIds ? `<div class="duebox"><b>Treino por tema: ${esc(qTema)}</b><span class="tiny">${qIds.size} questões reais deste tema. As próximas vêm só dele.</span><button class="btn ghost sm" data-act="qTemaOff">Sair do tema</button></div>` : ''}
     ${qz}
     <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:700">Adicionar questão real</summary>
       <form data-form="q" style="margin-top:10px"><div class="row"><input name="exame" placeholder="Exame (ex.: 42º)" required style="flex:1"><input name="num" placeholder="Nº" style="max-width:80px"><select name="materia" style="flex:1">${matOpts}</select></div>
@@ -1536,7 +1676,7 @@ let qDueOnly = false;
 function startQuiz() {
   const mat = $('#qmat') ? $('#qmat').value : '', ex = $('#qex') ? $('#qex').value : '';
   const dq = new Set(dueQs().map(q => q.id));
-  const pool = allQ().filter(q => !q.anulada && (!mat || q.materia === mat) && (!ex || q.exame === ex) && (!qDueOnly || dq.has(q.id)));
+  const pool = allQ().filter(q => !q.anulada && (!mat || q.materia === mat) && (!ex || q.exame === ex) && (!qDueOnly || dq.has(q.id)) && (!qIds || qIds.has(q.id)));
   if (!pool.length) { toast(qDueOnly ? 'Nenhuma questão vencida hoje.' : 'Nenhuma questão com esse filtro.'); return; }
   pool.sort((a, b) => (dq.has(b.id) - dq.has(a.id)) || (histOf(a).length - histOf(b).length) || (Math.random() - .5));
   quiz = { id: pool[0].id, pick: null };
@@ -1677,7 +1817,15 @@ document.addEventListener('click', e => {
   if (a === 'delLem') { S.lembretes = S.lembretes.filter(x => x.id !== d.id); save(); render(); return; }
   if (a === 'delLink') { (S.links[d.b] || []).splice(Number(d.i), 1); save(); render(); return; }
   if (a === 'delQ') { S.questions = S.questions.filter(x => x.id !== d.id); save(); render(); return; }
-  if (a === 'qStart' || a === 'qNext') { startQuiz(); render(); return; }
+  if (a === 'qStart' || a === 'qNext') { if (a === 'qStart') { qIds = null; qTema = ''; } startQuiz(); render(); return; }
+  if (a === 'qTemaOff') { qIds = null; qTema = ''; quiz = null; render(); return; }
+  if (a === 'cpTreino') { const t = ((CER.mats[d.m] || {}).temas || [])[Number(d.i)]; if (!t) return; qIds = new Set(t.ids); qTema = t.t; startQuiz(); go('#/sim'); return; }
+  if (a === 'cpClone') { qIds = new Set([d.a, d.b]); qTema = 'par de questões parecidas'; startQuiz(); go('#/sim'); return; }
+  if (a === 'crFeito') { const k = d.d + '|' + d.i, tk = crTk(), t = window.C48_CRONO.dias[d.d].tarefas[Number(d.i)]; if (tk[k]) delete tk[k]; else tk[k] = today(); if (t && t.k === 'novo' && t.key) { const r = cpRead(); if (tk[k]) r[t.key] = r[t.key] || today(); else delete r[t.key]; } save(); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'crTreino') { const [mi, bi] = d.k.split(':'), b = ((CURP[mi] || {}).blocos || [])[Number(bi)], ts = (CER.mats[mi] || {}).temas || [], ix = b ? ts.findIndex(x => x.t === b.tema) : -1; if (ix < 0) { toast('Este bloco não tem questões reais ligadas.'); return; } qIds = new Set(ts[ix].ids); qTema = ts[ix].t; startQuiz(); go('#/sim'); return; }
+  if (a === 'crBateria') { const ts = (CER.mats[d.m] || {}).temas || [], ids = [].concat(...ts.map(x => x.ids)); for (let i = ids.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; } if (!ids.length) { toast('Sem questões para esta matéria.'); return; } qIds = new Set(ids.slice(0, 10)); qTema = 'bateria de ' + crMat(d.m).nome; startQuiz(); go('#/sim'); return; }
+  if (a === 'cpLido') { const r = cpRead(); if (r[d.k]) delete r[d.k]; else r[d.k] = today(); save(); const y = window.scrollY; render(); window.scrollTo(0, y); return; }
+  if (a === 'cardSrc') { CARD.src = d.s; CARD.deck = null; CARD.i = 0; CARD.show = false; go('#/cards'); return; }
   if (a === 'petrusTalk') { const L = FGVD(); if (!L.length) return; PET.f = (PET.f < 0 ? Math.floor(Date.now() / 864e5) : PET.f) + 1; const pd = document.getElementById('pdica'); if (pd) pd.outerHTML = fgvDicaHtml(PET.f); const c = document.querySelector('.pchar'); if (c) { c.classList.remove('talk'); void c.offsetWidth; c.classList.add('talk'); } return; }
   if (a === 'mockNew') { mockMonta(); go('#/mock'); return; }
   if (a === 'mockGo') { const M = S.mock; if (M) { M.i = clamp(Number(d.i), 0, M.ids.length - 1); M.conf = false; save(); render(); } return; }
