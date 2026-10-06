@@ -664,7 +664,7 @@ const FGVD = () => (window.C48_FGVDICAS && window.C48_FGVDICAS.dicas) || [];
 function fgvDicaHtml(ix) {
   const L = FGVD(); if (!L.length) return '';
   const d = L[((ix % L.length) + L.length) % L.length], rot = { dado: 'Dado das 640 questões reais e do edital', fonte: 'De uma fonte pública (confira)', opiniao: 'Opinião do Petrus, não é dado' }[d.tipo] || '';
-  return `<div class="pdica t-${d.tipo}" id="pdica"><span class="ptag">${rot}</span><b>Dica da prova: ${esc(d.t)}</b><p>${esc(d.x)}</p>${d.fonte ? `<small>Fonte: ${esc(d.fonte)}</small>` : ''}<small class="tiny">Toque no Petrus para outra dica.</small></div>`;
+  return `<div class="pdica t-${d.tipo}" id="pdica" data-act="petrusTalk" style="cursor:pointer"><span class="ptag">${rot}</span><b>Dica da prova: ${esc(d.t)}</b><p>${esc(d.x)}</p>${d.fonte ? `<small>Fonte: ${esc(d.fonte)}</small>` : ''}<small class="tiny">Toque aqui para outra dica.</small></div>`;
 }
 function petrusHero(mt, meta, dProva, nDue) {
   const M = petMood(), h = new Date().getHours(), greet = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
@@ -683,11 +683,14 @@ function petrusHero(mt, meta, dProva, nDue) {
   const extra = [nDue ? (nDue > 1 ? `${nDue} revisões esperando` : '1 revisão esperando') : '', `${dProva} dias para a 1ª fase`].filter(Boolean).join(' · ');
   const tip = M.parts.map(p => p[0] + ' ' + p[1] + '/' + p[2]).join(' · ');
   const dicaFgv = fgvDicaHtml(PET.f >= 0 ? PET.f : Math.floor(Date.now() / 864e5));
-  return `<div class="petrus-hero m-${M.key}"><div class="pchar" data-act="petrusTalk" title="Clique para ouvir uma dica">${petrusSvg(M.key)}</div>
-  <div class="pbub"><span class="pname">PETRUS · SEU PROFESSOR</span><p id="pmsg"><b>${greet}, Lucas.</b> ${msg}</p>
-  ${dicaFgv}
-  <span class="pextra" title="${esc(tip)}">${extra}</span>
-  <div class="row" style="margin-top:12px">${pick ? `<button class="btn sm" data-act="bkOpen" data-k="${pick.k}">${ing ? 'Continuar a aula' : 'Abrir a aula de hoje'}</button>` : ''}<a class="btn ghost sm" href="#/rev" style="text-decoration:none">Ver revisões</a></div></div></div>`;
+  const arr = '<i class="arr"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i>';
+  return `<div class="hmin m-${M.key}"><div class="hm-l"><span class="hm-tag">PETRUS · SEU PROFESSOR</span>
+  <h1 class="hm-h mo-lines"><span>${greet}, Lucas.</span></h1>
+  <p id="pmsg" class="hm-p">${msg}</p>
+  <div class="row" style="margin-top:6px">${pick ? `<button class="pillb" data-act="bkOpen" data-k="${pick.k}">${ing ? 'Continuar a aula' : 'Abrir a aula de hoje'}${arr}</button>` : ''}<a class="pillb ghost" href="#/rev">Ver revisões${arr}</a></div></div>
+  <div class="hm-r"><div class="hm-orb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="hm-glass"><b class="hm-n" data-count="${dProva}">${dProva}</b><span>dias para a 1ª fase</span><small title="${esc(tip)}">${extra}</small></div></div>
+  <div class="hm-dica">${dicaFgv}</div></div>`;
 }
 document.addEventListener('mousemove', e => {
   if (PET.raf) return; PET.raf = requestAnimationFrame(() => { PET.raf = 0;
