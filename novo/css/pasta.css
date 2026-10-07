@@ -1,0 +1,23 @@
+/* PETRUS · pastas da biblioteca: as folhas aparecem para fora do arquivo (mais ao passar o mouse) e tudo no centro */
+.folder { height: 238px; }
+.fd-back { top: 24px; }
+.fd-back::before { top: -15px; }
+.fd-sheet { left: 16px; right: 16px; bottom: 36px; height: 178px; }
+.fd-sheet.s1 { --y: -4px; --r: -1.6deg; }
+.fd-sheet.s2 { --y: -13px; --r: 1.2deg; }
+.fd-sheet.s3 { --y: -22px; --r: -.6deg; }
+.folder:hover .fd-sheet.s1 { --y: -28px; --r: -3.6deg; }
+.folder:hover .fd-sheet.s2 { --y: -46px; --r: 2.8deg; transition-delay: .05s; }
+.folder:hover .fd-sheet.s3 { --y: -64px; --r: -1.4deg; transition-delay: .1s; }
+.folder:hover { transform: translateY(-5px); }
+.fd-front { top: 86px; padding: 30px 18px 16px; align-items: center; justify-content: center; text-align: center; gap: 5px; }
+.fd-front .cv-ic { left: 50%; right: auto; top: -26px; transform: translateX(-50%); }
+.folder:hover .fd-front .cv-ic { transform: translateX(-50%) rotate(-8deg) scale(1.08); }
+.fd-front h3 { padding-right: 0; margin: 0; font-size: 16.5px; line-height: 1.2; }
+.fd-front .cv-meta { font-size: 12.5px; }
+.fd-chip { align-self: center; position: static; }
+.folder .cv-num { margin-top: 5px; font-size: 12px; text-align: center; }
+.folder.opening .fd-sheet.s1 { --y: -62px; --r: -2.4deg; }
+.folder.opening .fd-sheet.s2 { --y: -84px; --r: 1.8deg; }
+.folder.opening .fd-sheet.s3 { --y: -106px; --r: -.9deg; }
+.fd-front h3, .fd-front .cv-meta { text-wrap: balance; }

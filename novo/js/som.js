@@ -34,6 +34,7 @@
       noise(t, .26, .17, 'bandpass', 3600, .9, 2200); noise(t + .02, .2, .12, 'highpass', 5200, .6, 3200);
       for (var i = 0; i < 4; i++) noise(t + .05 + i * .045 + Math.random() * .015, .05, .07, 'bandpass', 4200 + Math.random() * 1600, 1.2);
     },
+    folhaleve: function (t) { noise(t, .2, .07, 'bandpass', 3800, .9, 2400); for (var i = 0; i < 3; i++) noise(t + .04 + i * .05, .05, .04, 'bandpass', 4300 + Math.random() * 1400, 1.2); },
     folhas: function (t) { SND.folha(t); SND.folha(t + .17); },
     bolha: function (t) { /* gota de líquido */
       var o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(260, t); o.frequency.exponentialRampToValueAtTime(980, t + .13); env(g, t, .01, .12, .2);
@@ -75,6 +76,7 @@
     if (/^#\/(aula|materia)\//.test(location.hash) && Date.now() - lastFolha > 350) folha('folha');
   });
   document.addEventListener('mouseover', function (e) {
+    var f = e.target.closest && e.target.closest('.folder'); if (f && !(e.relatedTarget && f.contains(e.relatedTarget))) P.som('folhaleve');
     var t = e.target.closest && e.target.closest('[data-rend]'); if (!t || (e.relatedTarget && t.contains(e.relatedTarget))) return;
     P.som('bolha');
   });
