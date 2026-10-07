@@ -135,11 +135,11 @@
     var href = f.getAttribute('href');
     if (P.S.set.motion === 'off' || !document.startViewTransition || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
     e.preventDefault(); if (f.classList.contains('opening')) return;
-    f.classList.add('opening'); f.style.viewTransitionName = 'matcard';
+    f.classList.add('opening'); document.body.classList.add('fdopen'); f.style.viewTransitionName = 'matcard';
     setTimeout(function () {
       var vt = document.startViewTransition(function () { history.pushState(null, '', href); render(); });
-      vt.finished.then(function () { f.style.viewTransitionName = ''; }, function () { });
-    }, 560);
+      vt.ready.catch(function () { }); vt.updateCallbackDone.catch(function () { }); vt.finished.then(function () { f.style.viewTransitionName = ''; document.body.classList.remove('fdopen'); }, function () { document.body.classList.remove('fdopen'); });
+    }, 850);
   });
   document.addEventListener('click', function (e) {
     var el = e.target.closest('[data-act]'); if (!el) return; var a = el.getAttribute('data-act'), S = P.S, d = el.dataset;
