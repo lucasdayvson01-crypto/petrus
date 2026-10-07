@@ -5,13 +5,15 @@
   var P = window.P, S = P.S;
   if (S.set.sound == null) S.set.sound = 'on';
   var ctx = null, master = null, noiseBuf = null, delay = null, wet = null, last = {};
-  var PENTA = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66]; /* dó maior pentatônica: nunca desafina */
+  var PENTA = [261.63, 293.66, 329.63, 392, 440, 523.25, 587.33]; /* dó maior pentatônica: nunca desafina */
   function on() { return S.set.sound !== 'off'; }
+  function vol() { var v = S.set.vol == null ? 40 : +S.set.vol; return Math.max(0, Math.min(100, v)) / 100 * .9; }
+  P.somAplicar = function () { if (master) master.gain.value = vol(); };
 
   function init() {
     if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return ctx; }
     var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
-    ctx = new AC(); master = ctx.createGain(); master.gain.value = .5; master.connect(ctx.destination);
+    ctx = new AC(); master = ctx.createGain(); master.gain.value = vol(); var suav = ctx.createBiquadFilter(); suav.type = 'lowpass'; suav.frequency.value = 2400; suav.Q.value = .4; master.connect(suav); suav.connect(ctx.destination);
     var n = ctx.sampleRate; noiseBuf = ctx.createBuffer(1, n, n); var d = noiseBuf.getChannelData(0); for (var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
     /* eco curto, usado só pela magia (como na primeira versão) */
     delay = ctx.createDelay(.6); delay.delayTime.value = .21; var fb = ctx.createGain(); fb.gain.value = .38; wet = ctx.createGain(); wet.gain.value = .5;
@@ -50,19 +52,19 @@
       noise(t, .9, .05, 'highpass', 3000, .5, 9000); tone('sine', 196, 392, t, .5, .08);
     },
     /* ---- sons novos: limpos e curtos ---- */
-    tap: function (t) { gota(1100, t, .035, .1); },
-    nav: function (t) { var f = PENTA[(P.somNota || 0) % 7]; nota(f, t, .22, .07); nota(f * 1.5, t + .045, .16, .03); },
-    pop: function (t) { gota(520, t, .06, .18); gota(780, t + .09, .045, .22); },
-    ok: function (t) { nota(659.25, t, .2, .07); nota(783.99, t + .1, .2, .07); nota(1046.5, t + .2, .34, .07); },
-    erro: function (t) { nota(220, t, .22, .07, 175); nota(165, t + .14, .3, .06, 140); },
-    troca: function (t) { var d = document.documentElement.getAttribute('data-mode') === 'dark'; nota(d ? 784 : 523.25, t, .14, .055); nota(d ? 523.25 : 784, t + .1, .22, .055); },
-    feche: function (t) { nota(784, t, .14, .05, 600); },
+    tap: function (t) { gota(330, t, .03, .12); },
+    nav: function (t) { var f = PENTA[(P.somNota || 0) % 7]; nota(f, t, .26, .07); nota(f * 1.5, t + .05, .18, .025); },
+    pop: function (t) { gota(240, t, .06, .2); gota(330, t + .09, .045, .24); },
+    ok: function (t) { nota(329.63, t, .24, .07); nota(392, t + .11, .24, .07); nota(523.25, t + .22, .4, .07); },
+    erro: function (t) { nota(165, t, .26, .07, 130); nota(123, t + .15, .34, .06, 105); },
+    troca: function (t) { var d = document.documentElement.getAttribute('data-mode') === 'dark'; nota(d ? 392 : 261.63, t, .16, .055); nota(d ? 261.63 : 392, t + .11, .26, .055); },
+    feche: function (t) { nota(392, t, .16, .05, 300); },
     /* folha: farfalhar leve (um sopro curto e macio, sem chiado agudo) */
-    folha: function (t) { var b = [420, 520, 620, 700][Math.floor(Math.random() * 4)]; gota(b, t, .07, .26); gota(b * 1.5, t + .12, .045, .24); gota(b * 1.25, t + .23, .03, .3); },
-    folhas: function (t) { gota(360, t, .07, .28); gota(540, t + .1, .055, .26); gota(450, t + .21, .045, .26); gota(680, t + .33, .03, .34); }
+    folha: function (t) { var b = [210, 250, 290, 330][Math.floor(Math.random() * 4)]; gota(b, t, .07, .3); gota(b * 1.5, t + .13, .045, .28); gota(b * 1.25, t + .25, .03, .34); },
+    folhas: function (t) { gota(190, t, .07, .32); gota(285, t + .11, .055, .3); gota(230, t + .23, .045, .3); gota(340, t + .36, .03, .38); }
   };
   P.som = function (nome) {
-    if (!on() || !SND[nome]) return; var ag = Date.now(); if (last[nome] && ag - last[nome] < 110) return; last[nome] = ag;
+    if (!on() || !SND[nome] || vol() <= 0) return; var ag = Date.now(); if (last[nome] && ag - last[nome] < 110) return; last[nome] = ag;
     var c = init(); if (!c) return; try { SND[nome](t0()); } catch (e) { if (window.console) console.warn('som', nome, e && e.message); }
   };
   /* o navegador só libera o áudio depois de um toque: prepara no primeiro gesto */

@@ -1,0 +1,39 @@
+/* PETRUS · ajustes: barra de rolagem do menu, formatos de pasta, cores de pasta e controle de volume */
+
+/* menu em pílula com muitas opções: barra fina e visível para alcançar a última */
+.rail { scrollbar-width: thin; scrollbar-color: rgba(124, 92, 255, .55) transparent; }
+.rail::-webkit-scrollbar { display: block; width: 5px; }
+.rail::-webkit-scrollbar-track { background: transparent; margin: 18px 0; }
+.rail::-webkit-scrollbar-thumb { background: rgba(124, 92, 255, .5); border-radius: 999px; }
+.rail::-webkit-scrollbar-thumb:hover { background: rgba(124, 92, 255, .8); }
+.rail:not(:hover):not(.open)::-webkit-scrollbar { width: 3px; }
+
+/* volume */
+.rg { flex: none; width: min(180px, 42vw); height: 6px; border-radius: 999px; background: var(--surface2); -webkit-appearance: none; appearance: none; outline: none; }
+.rg::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 2px 8px rgba(80, 50, 200, .45); cursor: pointer; }
+.rg::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 2px 8px rgba(80, 50, 200, .45); cursor: pointer; }
+.rg:disabled { opacity: .4; }
+.rg:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+
+/* cores das pastas */
+html[data-pcor="site"] .folder { --h: var(--acc-h) !important; }
+html[data-pcor="neutras"] .folder .fd-back, html[data-pcor="neutras"] .folder .fd-front { filter: saturate(.1); }
+html[data-pcor="neutras"] .folder .cv-ic { color: #55555c; }
+
+/* formato: cartão (liso, sem folhas nem orelha) */
+html[data-pasta="cartao"] .folder { height: 176px; }
+html[data-pasta="cartao"] .fd-back, html[data-pasta="cartao"] .fd-sheet { display: none; }
+html[data-pasta="cartao"] .fd-front { top: 0; border-radius: 26px; padding-top: 38px; }
+html[data-pasta="cartao"] .folder:hover .fd-front { transform: none; }
+html[data-pasta="cartao"] .folder.opening .fd-front { transform: scale(1.02); }
+
+/* formato: livro (lombada à esquerda e bordas de página à direita) */
+html[data-pasta="livro"] .folder { height: 196px; }
+html[data-pasta="livro"] .fd-back, html[data-pasta="livro"] .fd-sheet { display: none; }
+html[data-pasta="livro"] .fd-front { top: 0; border-radius: 8px 22px 22px 8px; padding: 34px 20px 16px 34px;
+  background: linear-gradient(90deg, hsl(var(--h) 46% 58%) 0 14px, rgba(255, 255, 255, .45) 14px 16px, transparent 16px), linear-gradient(180deg, hsl(var(--h) 78% 90% / .98), hsl(var(--h) 70% 84% / .99));
+  box-shadow: 7px 0 0 -2px #FBFBFF, 9px 0 0 -2px hsl(var(--h) 25% 80%), 0 18px 30px -20px hsl(var(--h) 50% 30% / .5); }
+html[data-pasta="livro"] .fd-front .cv-ic { left: 50%; top: -22px; }
+html[data-pasta="livro"] .folder:hover .fd-front { transform: perspective(900px) rotateY(-9deg); transform-origin: 0 50%; }
+html[data-pasta="livro"] .folder.opening .fd-front { transform: perspective(900px) rotateY(-24deg); transform-origin: 0 50%; }
+:root[data-mode="dark"][data-pasta="livro"] .fd-front, html[data-mode="dark"][data-pasta="livro"] .fd-front { box-shadow: 7px 0 0 -2px #C9C9D2, 9px 0 0 -2px #8d8d97, 0 18px 30px -20px rgba(0, 0, 0, .7); }
