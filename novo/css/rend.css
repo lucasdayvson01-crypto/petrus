@@ -1,0 +1,126 @@
+/* PETRUS · rendimento: pílula deitada de vidro fosco com líquido roxo + telinha que abre com tinta roxa suave */
+@property --r { syntax: '<length>'; inherits: false; initial-value: 0px; }
+
+.rp-bar { display: grid; gap: 9px; margin: 22px 0 0; max-width: 560px; }
+.rp-cap { font-size: 12.5px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--mut); }
+
+.rpill { --H: 56px; display: block; width: 100%; max-width: 560px; cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+.rpill.sm { --H: 24px; max-width: none; margin-top: 12px; }
+.rp-glass {
+  position: relative; display: block; height: var(--H); border-radius: 999px; overflow: hidden;
+  background: color-mix(in srgb, var(--surface) 52%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, .6);
+  box-shadow: inset 0 2px 7px rgba(124, 92, 255, .14), 0 12px 28px -16px rgba(124, 92, 255, .55);
+  transition: transform .4s cubic-bezier(.2, .8, .2, 1), box-shadow .4s;
+}
+.rpill:hover .rp-glass, .rpill:focus-visible .rp-glass { transform: translateY(-1px); box-shadow: inset 0 2px 7px rgba(124, 92, 255, .18), 0 16px 32px -14px rgba(124, 92, 255, .7); }
+.rpill:focus-visible .rp-glass { outline: 2px solid #9B7BFF; outline-offset: 3px; }
+
+.rp-liquid {
+  position: absolute; inset: 0 auto 0 0; width: calc(var(--p) * 1%); overflow: hidden;
+  background: linear-gradient(100deg, #9D82FF 0%, #7C5CFF 55%, #A68CFF 100%);
+  animation: rpfill 1.4s cubic-bezier(.2, .8, .2, 1) both;
+}
+.rp-liquid::before {
+  content: ''; position: absolute; inset: -40% -25%;
+  background: radial-gradient(60% 90% at 28% 38%, rgba(255, 255, 255, .38), transparent 62%), radial-gradient(48% 80% at 74% 72%, rgba(255, 255, 255, .24), transparent 62%), radial-gradient(40% 70% at 52% 20%, rgba(190, 170, 255, .5), transparent 60%);
+  animation: rpflow 8s ease-in-out infinite alternate;
+}
+.rp-edge { position: absolute; top: 0; bottom: 0; left: calc(var(--p) * 1% - 11px); width: 22px; overflow: hidden; pointer-events: none; animation: rpedge 1.4s cubic-bezier(.2, .8, .2, 1) both; }
+.rp-edge svg { display: block; width: 100%; height: 300%; fill: #A68CFF; animation: rpwave 3.2s linear infinite; }
+.rp-bub { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, .55); pointer-events: none; animation: rpbub 5s ease-in-out infinite; }
+.rp-bub.b1 { width: calc(var(--H) * .14); height: calc(var(--H) * .14); left: calc(var(--p) * .22%); top: 62%; }
+.rp-bub.b2 { width: calc(var(--H) * .09); height: calc(var(--H) * .09); left: calc(var(--p) * .5%); top: 30%; animation-delay: -1.8s; }
+.rp-bub.b3 { width: calc(var(--H) * .12); height: calc(var(--H) * .12); left: calc(var(--p) * .78%); top: 66%; animation-delay: -3.2s; }
+.rp-shine { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 46%); opacity: .75; pointer-events: none; }
+.rp-tick { position: absolute; left: calc(var(--e) * 1%); top: 16%; bottom: 16%; width: 2px; border-radius: 2px; background: rgba(28, 28, 30, .4); pointer-events: none; }
+.rp-txt {
+  position: absolute; right: calc(var(--H) * .16); top: 50%; transform: translateY(-50%); display: flex; align-items: baseline; gap: 6px;
+  height: calc(var(--H) * .66); padding: 0 calc(var(--H) * .24); align-items: center; border-radius: 999px; color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+}
+.rp-txt b { font-size: calc(var(--H) * .34); font-weight: 650; letter-spacing: -.02em; }
+.rp-txt small { font-size: calc(var(--H) * .23); font-weight: 600; color: var(--mut); }
+.rpill.sm .rp-txt small { font-size: 10px; }
+.rpill.sm .rp-txt b { font-size: 11.5px; }
+
+:root[data-mode="dark"] .rp-glass { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .16); box-shadow: inset 0 2px 7px rgba(0, 0, 0, .35), 0 12px 28px -16px rgba(124, 92, 255, .6); }
+:root[data-mode="dark"] .rp-shine { opacity: .28; }
+:root[data-mode="dark"] .rp-tick { background: rgba(255, 255, 255, .55); }
+:root[data-mode="dark"] .rp-txt { background: rgba(28, 28, 33, .82); }
+
+@keyframes rpfill { from { width: 0; } }
+@keyframes rpedge { from { left: -11px; } }
+@keyframes rpflow { to { transform: translateX(18%) scale(1.06); } }
+@keyframes rpwave { to { transform: translateY(-33.3333%); } }
+@keyframes rpbub { 0%, 100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(-6px); opacity: .8; } }
+
+/* a telinha: abre com tinta roxa que se espalha de dentro da pílula */
+.rp-ov {
+  --r: 0px; position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: 20px;
+  background: rgba(124, 92, 255, .2); backdrop-filter: blur(12px) saturate(1.3); -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-mask-image: radial-gradient(circle at var(--ox) var(--oy), #000 calc(var(--r) - 140px), transparent var(--r));
+  mask-image: radial-gradient(circle at var(--ox) var(--oy), #000 calc(var(--r) - 140px), transparent var(--r));
+  transition: --r 1s cubic-bezier(.22, .9, .24, 1);
+}
+.rp-ov.on { --r: 175vmax; }
+.rp-ov.off { --r: 0px; transition-duration: .5s; }
+.rp-ink { position: absolute; left: var(--ox); top: var(--oy); width: 150vmax; height: 150vmax; margin: -75vmax 0 0 -75vmax; border-radius: 50%; pointer-events: none; transform: scale(0); opacity: .9; transition: transform 1s cubic-bezier(.22, .9, .24, 1), opacity .8s;
+  background: radial-gradient(circle, rgba(176, 150, 255, .55), rgba(124, 92, 255, .24) 38%, transparent 68%); }
+.rp-ov.on .rp-ink { transform: scale(1); }
+.rp-wrap { position: relative; width: min(440px, 100%); max-height: 88vh; overflow: auto; border-radius: 30px; opacity: 0; transform: scale(.9) translateY(14px); transition: opacity .5s .28s, transform .7s .28s cubic-bezier(.2, .8, .2, 1); scrollbar-width: none; }
+.rp-wrap::-webkit-scrollbar { display: none; }
+.rp-ov.on .rp-wrap { opacity: 1; transform: none; }
+.rp-ov.off .rp-wrap { opacity: 0; transform: scale(.95); transition-delay: 0s; transition-duration: .3s; }
+.rp-card {
+  position: relative; padding: 26px 24px 22px; border-radius: 30px; color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 84%, transparent); backdrop-filter: blur(26px) saturate(1.5); -webkit-backdrop-filter: blur(26px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, .55); box-shadow: 0 30px 70px -30px rgba(90, 60, 220, .6);
+}
+:root[data-mode="dark"] .rp-card { border-color: rgba(255, 255, 255, .14); background: rgba(28, 28, 33, .86); }
+.rp-x { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(124, 92, 255, .12); color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer; }
+.rp-eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #6F4CF0; }
+:root[data-mode="dark"] .rp-eyebrow { color: #BDA9FF; }
+.rp-card h3 { margin: 6px 36px 14px 0; font-size: 22px; letter-spacing: -.02em; }
+.rp-big { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+.rp-big b { font-size: 54px; line-height: 1; letter-spacing: -.045em; color: #7C5CFF; }
+:root[data-mode="dark"] .rp-big b { color: #B9A4FF; }
+.rp-big span { font-size: 14px; line-height: 1.5; color: var(--mut); }
+.rp-line { margin-top: 15px; }
+.rp-lt { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
+.rp-lt b { font-weight: 650; }
+.rp-mini { height: 8px; margin-top: 7px; border-radius: 999px; background: rgba(124, 92, 255, .14); overflow: hidden; }
+.rp-mini i { display: block; height: 100%; width: var(--p); border-radius: inherit; background: linear-gradient(90deg, #9D82FF, #7C5CFF); }
+.rp-line small { display: block; margin-top: 6px; font-size: 12.5px; line-height: 1.5; color: var(--mut); }
+.rp-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.rp-two div { padding: 12px 14px; border-radius: 18px; background: rgba(124, 92, 255, .09); }
+.rp-two b { display: block; font-size: 24px; letter-spacing: -.03em; }
+.rp-two span { font-size: 12px; line-height: 1.4; color: var(--mut); }
+.rp-note { margin-top: 16px; font-size: 14px; line-height: 1.55; }
+.rp-next { display: grid; gap: 6px; margin-top: 16px; }
+.rp-next span { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mut); }
+.rp-next a { padding: 10px 13px; border-radius: 14px; background: rgba(124, 92, 255, .09); font-size: 14px; font-weight: 600; color: var(--ink); }
+.rp-how { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12.5px; line-height: 1.55; color: var(--mut); }
+
+@media (max-width: 520px) { .rp-big b { font-size: 46px; } .rp-ov { padding: 12px; } }
+
+/* líquido mais vivo: a pílula balança quando é tocada e o líquido acelera ao passar o mouse */
+.rpill:hover .rp-liquid::before { animation-duration: 3.5s; }
+.rpill:hover .rp-edge svg { animation-duration: 1.5s; }
+.rpill.slosh .rp-glass { animation: rpjelly .8s cubic-bezier(.3, 1.4, .5, 1); }
+.rpill.slosh .rp-liquid { animation: none; filter: brightness(1.15) saturate(1.2); transition: filter .6s; }
+@keyframes rpjelly { 0% { transform: scale(1, 1); } 25% { transform: scale(1.035, .86); } 55% { transform: scale(.985, 1.1); } 80% { transform: scale(1.01, .97); } 100% { transform: scale(1, 1); } }
+
+/* magia: anéis de luz, estrelinhas que voam e cintilações em volta da telinha */
+.rp-fx { position: absolute; left: var(--ox); top: var(--oy); width: 0; height: 0; pointer-events: none; }
+.rp-ring { position: absolute; left: -10px; top: -10px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(190, 165, 255, .9); box-shadow: 0 0 22px 4px rgba(150, 120, 255, .55), inset 0 0 14px rgba(190, 165, 255, .5); opacity: 0; animation: rpring 1.3s cubic-bezier(.2, .8, .3, 1) both; }
+.rp-ring.r2 { animation-delay: .22s; border-color: rgba(220, 205, 255, .8); }
+@keyframes rpring { 0% { transform: scale(.4); opacity: .95; } 100% { transform: scale(30); opacity: 0; } }
+.rp-spark { position: absolute; left: -8px; top: -8px; width: 16px; height: 16px; opacity: 0; background: hsl(var(--h) 100% 88%); filter: drop-shadow(0 0 6px hsl(var(--h) 100% 72%)) drop-shadow(0 0 14px rgba(140, 105, 255, .8));
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: rpspark 1.5s cubic-bezier(.15, .75, .3, 1) var(--dl) both; }
+@keyframes rpspark { 0% { transform: translate(0, 0) scale(0) rotate(0); opacity: 0; } 12% { opacity: 1; } 60% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(var(--s)) rotate(var(--rt)); opacity: 0; } }
+.rp-tw { position: absolute; inset: -14px; pointer-events: none; }
+.rp-twk { position: absolute; width: 14px; height: 14px; background: #D9CBFF; opacity: 0; filter: drop-shadow(0 0 7px #9B7BFF); clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: rptwk 2.6s ease-in-out var(--dl) infinite; }
+@keyframes rptwk { 0%, 100% { transform: scale(0) rotate(0); opacity: 0; } 45% { transform: scale(var(--s)) rotate(40deg); opacity: .95; } 70% { opacity: .5; } }
+:root[data-motion="off"] .rp-fx, :root[data-motion="off"] .rp-tw { display: none; }

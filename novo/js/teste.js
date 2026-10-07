@@ -51,6 +51,7 @@
     var q = P.q(T.cur.id), ok = L === q.gab, tema = temaDe(P.matDe(q), q.id) || T.tema, reforco = T.cur.reforco;
     var res = P.registrar(q, ok, { tema: tema, resp: L, reforco: reforco });
     if (!reforco) { if (ok) T.a++; else { T.e++; T.errosNovos.push(q.id); } T.resp[q.id] = L; }
+    if (P.som) P.som(L === q.gab ? 'ok' : 'erro');
     P.$$('#topts .qopt').forEach(function (b) { var l = b.getAttribute('data-tans'); b.disabled = true; if (l === q.gab) b.classList.add('right'); else if (l === L) b.classList.add('wrong'); });
     var ex = P.explicacao(q), refs = ex.regra ? P.leiRefs(ex.regra.b).slice(0, 4) : [], bi = P.blocoDoTema(P.matDe(q), tema);
     var fb = '<div class="fb ' + (ok ? 'ok' : 'no') + '"><h3>' + (ok ? 'Acertou!' : 'Errou, e tudo bem: agora você sabe onde olhar.') + '</h3><p>' + (ok ? 'Gabarito ' + q.gab + '. ' : 'Você marcou <b>' + L + '</b>. O gabarito é <b>' + q.gab + '</b>. ') + (ex.comentario ? esc(ex.comentario) : 'A alternativa correta diz: ' + esc(ex.gabarito)) + '</p>' +

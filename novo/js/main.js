@@ -164,6 +164,7 @@
     else if (a === 'mode') { S.set.mode = d.v; P.save(); P.apply(); render({ keep: true }); }
     else if (a === 'size') { S.set.size = +d.v; P.save(); P.apply(); render({ keep: true }); }
     else if (a === 'motion') { S.set.motion = S.set.motion === 'off' ? 'on' : 'off'; P.save(); P.apply(); render({ keep: true }); }
+    else if (a === 'sound') { S.set.sound = S.set.sound === 'off' ? 'on' : 'off'; P.save(); render({ keep: true }); if (S.set.sound !== 'off') P.som('magia'); }
     else if (a === 'export') {
       var blob = new Blob([JSON.stringify({ exportado: new Date().toISOString(), progresso: { lidas: S.read, tarefas: S.done, checklist: S.ck }, notas: S.notes }, null, 2)], { type: 'application/json' }), u = URL.createObjectURL(blob), l = document.createElement('a'); l.href = u; l.download = 'petrus-progresso.json'; l.click(); setTimeout(function () { URL.revokeObjectURL(u); }, 1000);
     }
