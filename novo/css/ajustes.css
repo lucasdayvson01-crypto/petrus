@@ -51,3 +51,9 @@ html[data-pasta="livro"] .folder.opening .fd-front { transform: perspective(900p
   .rbar.h:hover, .rbar.h.drag { height: 6px; width: auto; margin-left: 0; }
 }
 .rbar.h { height: 4px; }
+/* notas: texto longo sem espaços quebra dentro do cartão e o botão de apagar fica sempre visível */
+.note { min-width: 0; max-width: 100%; grid-template-columns: minmax(0, 1fr); overflow: hidden; }
+.note .row, .note .grow { min-width: 0; }
+.note .nt, .note .nx, .note .tiny { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }
+.note .row > .ib { flex: none; }
+.anot, .bk .bd, .bkbox, .prose, .folha { overflow-wrap: anywhere; }
