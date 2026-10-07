@@ -12,11 +12,11 @@
 .rbar.drag .rthumb { cursor: grabbing; }
 :root[data-mode="dark"] .rbar { background: rgba(190, 170, 255, .16); }
 /* volume */
-.rg { flex: none; width: min(180px, 42vw); height: 6px; border-radius: 999px; background: var(--surface2); -webkit-appearance: none; appearance: none; outline: none; }
-.rg::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 2px 8px rgba(80, 50, 200, .45); cursor: pointer; }
-.rg::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 2px 8px rgba(80, 50, 200, .45); cursor: pointer; }
-.rg:disabled { opacity: .4; }
-.rg:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+.rgvol { flex: none; width: min(180px, 42vw); height: 6px; border-radius: 999px; background: var(--surface2); -webkit-appearance: none; appearance: none; outline: none; }
+.rgvol::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 2px 8px rgba(80, 50, 200, .45); cursor: pointer; }
+.rgvol::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 2px 8px rgba(80, 50, 200, .45); cursor: pointer; }
+.rgvol:disabled { opacity: .4; }
+.rgvol:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
 
 /* cores das pastas */
 html[data-pcor="site"] .folder { --h: var(--acc-h) !important; }
