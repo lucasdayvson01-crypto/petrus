@@ -1,0 +1,28 @@
+﻿// Dicas de MÉTODO (não são afirmações jurídicas). Uma por dia, em rodízio.
+window.C48_DICAS = [
+  'Divisão de esforço sugerida pelo Ceisc: cerca de 40% teoria, 40% questões e 20% revisão. Só teoria ou só questão não basta.',
+  'Revise 24 horas e 7 dias depois de estudar. Revisão espaçada evita estudar o mesmo conteúdo várias vezes.',
+  'Reserve uma revisão semanal longa (o Ceisc sugere sábado de manhã, cerca de 3 horas) para o que foi visto na semana.',
+  'A fase de revisão intensiva começa 20 a 30 dias antes da prova: menos conteúdo novo e mais consolidação.',
+  'Alterne leitura, questões e simulados. Mudar de atividade mantém o ritmo e ajuda a memória.',
+  'Estudar é maratona, não corrida: divida o conteúdo por dia e use mapas mentais para fechar cada tema.',  'Questão primeiro, teoria sob demanda. Errar na bateria é barato; errar na prova é caro.',
+  'Antes de reler, tente lembrar: folha em branco, 3 minutos. Só depois confira o resumo.',
+  'A FGV cobra literalidade. Leia a lei seca com caneta na mão e marque prazos, quóruns e verbos.',
+  'Toda questão vira três perguntas: qual é o instituto, qual é a regra, qual é a exceção.',
+  'Leia o comando antes do enunciado. "Incorreta" e "exceto" derrubam quem lê com pressa.',
+  'Desconfie de "sempre", "nunca", "somente", mas confira a regra: nem toda alternativa absoluta está errada.',
+  'Narrativa longa quase sempre esconde um ponto só: competência, prazo, instrumento cabível ou base legal.',
+  'Duas alternativas parecidas? Compare palavra por palavra. A diferença é a pegadinha.',
+  'Marque o grau de certeza de cada resposta: certo, duvidoso, chute. Acerto no chute vai para o caderno de erros.',
+  'Dia ruim: versão mínima. Revisões D1 e D2 e 5 questões. Não zere a sequência.',
+  'Ética, Direitos Humanos e Filosofia pesam juntas no mínimo de 15% do edital. Não deixe para o fim.',
+  'Resumo que não cabe em uma página foi dividido errado. Divida o tópico.',
+  'Revise antes de esquecer. A revisão D1 vale mais do que uma hora de releitura na semana seguinte.',
+  'Simule no horário da prova, 13h às 18h, para o corpo aprender o ritmo das 5 horas.',
+  'Cerca de 3 minutos e 45 segundos por questão. Questão travada por mais de 5 minutos: marque e volte depois.',
+  'Sono antes de maratona. Treino e pausa fazem parte do plano.',
+  'Pomodoro opcional: 50 minutos de estudo, 10 de pausa, uma pausa maior a cada três blocos.',
+  'Errou duas vezes o mesmo ponto? Pare, escreva a regra em uma linha e explique em voz alta.',
+  'Estudando uma matéria que você também cursa na faculdade? Aproveite: aula e OAB se reforçam.',
+  'Na véspera, só lista de pegadinhas, logística e sono. Nada de conteúdo novo.'
+];
