@@ -31,6 +31,11 @@
   }
   /* nota limpa: senoide pura com ataque suave, sem ruído nem eco */
   function nota(f, t, dur, peak, f2) { tone('sine', f, f2 || 0, t, dur, peak); }
+  /* gota d'água: senoide que sobe rápido de tom e some, sem nenhum ruído */
+  function gota(f, t, peak, dur) {
+    var o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 1.9, t + .085);
+    env(g, t, .005, peak, dur || .2); o.connect(g); g.connect(master); o.start(t); o.stop(t + (dur || .2) + .05);
+  }
 
   var SND = {
     /* ---- os dois originais, mantidos ---- */
@@ -45,16 +50,16 @@
       noise(t, .9, .05, 'highpass', 3000, .5, 9000); tone('sine', 196, 392, t, .5, .08);
     },
     /* ---- sons novos: limpos e curtos ---- */
-    tap: function (t) { nota(880, t, .07, .045); },
+    tap: function (t) { gota(1100, t, .035, .1); },
     nav: function (t) { var f = PENTA[(P.somNota || 0) % 7]; nota(f, t, .22, .07); nota(f * 1.5, t + .045, .16, .03); },
-    pop: function (t) { nota(523.25, t, .09, .06); nota(783.99, t + .07, .16, .06); },
+    pop: function (t) { gota(520, t, .06, .18); gota(780, t + .09, .045, .22); },
     ok: function (t) { nota(659.25, t, .2, .07); nota(783.99, t + .1, .2, .07); nota(1046.5, t + .2, .34, .07); },
     erro: function (t) { nota(220, t, .22, .07, 175); nota(165, t + .14, .3, .06, 140); },
     troca: function (t) { var d = document.documentElement.getAttribute('data-mode') === 'dark'; nota(d ? 784 : 523.25, t, .14, .055); nota(d ? 523.25 : 784, t + .1, .22, .055); },
     feche: function (t) { nota(784, t, .14, .05, 600); },
     /* folha: farfalhar leve (um sopro curto e macio, sem chiado agudo) */
-    folha: function (t) { noise(t, .26, .05, 'bandpass', 1700, 1.1, 1100); tone('sine', 300, 230, t + .13, .08, .03); },
-    folhas: function (t) { SND.folha(t); SND.folha(t + .2); }
+    folha: function (t) { var b = [420, 520, 620, 700][Math.floor(Math.random() * 4)]; gota(b, t, .07, .26); gota(b * 1.5, t + .12, .045, .24); gota(b * 1.25, t + .23, .03, .3); },
+    folhas: function (t) { gota(360, t, .07, .28); gota(540, t + .1, .055, .26); gota(450, t + .21, .045, .26); gota(680, t + .33, .03, .34); }
   };
   P.som = function (nome) {
     if (!on() || !SND[nome]) return; var ag = Date.now(); if (last[nome] && ag - last[nome] < 110) return; last[nome] = ag;
