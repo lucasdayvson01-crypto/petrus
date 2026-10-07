@@ -40,3 +40,14 @@ html[data-pasta="livro"] .fd-front .cv-ic { left: 50%; top: -22px; }
 html[data-pasta="livro"] .folder:hover .fd-front { transform: perspective(900px) rotateY(-9deg); transform-origin: 0 50%; }
 html[data-pasta="livro"] .folder.opening .fd-front { transform: perspective(900px) rotateY(-24deg); transform-origin: 0 50%; }
 :root[data-mode="dark"][data-pasta="livro"] .fd-front, html[data-mode="dark"][data-pasta="livro"] .fd-front { box-shadow: 7px 0 0 -2px #C9C9D2, 9px 0 0 -2px #8d8d97, 0 18px 30px -20px rgba(0, 0, 0, .7); }
+/* celular: o menu vira uma barra deitada embaixo; rola para os lados e a barra própria acompanha */
+@media (max-width: 820px) {
+  .rail, .rail:hover, .rail.open { overflow-x: auto !important; overflow-y: hidden !important; justify-content: flex-start !important; scrollbar-width: none; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  .rail::-webkit-scrollbar { display: none; }
+  .rail a { scroll-snap-align: center; }
+  .rail.has-scroll, .rail.has-scroll:hover, .rail.has-scroll.open { padding: 8px 8px 16px; }
+  .rbar.h { height: 4px; width: auto; }
+  .rbar.h .rthumb { top: 0; bottom: 0; left: 0; right: auto; height: 100%; background: linear-gradient(90deg, #A68CFF, #7C5CFF); }
+  .rbar.h:hover, .rbar.h.drag { height: 6px; width: auto; margin-left: 0; }
+}
+.rbar.h { height: 4px; }
