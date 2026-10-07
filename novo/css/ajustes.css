@@ -1,13 +1,16 @@
 /* PETRUS · ajustes: barra de rolagem do menu, formatos de pasta, cores de pasta e controle de volume */
 
-/* menu em pílula com muitas opções: barra fina e visível para alcançar a última */
-.rail { scrollbar-width: thin; scrollbar-color: rgba(124, 92, 255, .55) transparent; }
-.rail::-webkit-scrollbar { display: block; width: 5px; }
-.rail::-webkit-scrollbar-track { background: transparent; margin: 18px 0; }
-.rail::-webkit-scrollbar-thumb { background: rgba(124, 92, 255, .5); border-radius: 999px; }
-.rail::-webkit-scrollbar-thumb:hover { background: rgba(124, 92, 255, .8); }
-.rail:not(:hover):not(.open)::-webkit-scrollbar { width: 3px; }
-
+/* menu em pílula com muitas opções: a barra nativa fica escondida e a barra própria (barra.js) fica dentro das curvas da pílula */
+.rail { scrollbar-width: none; }
+.rail::-webkit-scrollbar { display: none; }
+.rail.has-scroll { padding-right: 12px; }
+.rail.has-scroll:not(:hover):not(.open) { padding-right: 6px; }
+.rbar { position: fixed; width: 4px; border-radius: 999px; z-index: 61; background: rgba(124, 92, 255, .12); opacity: .55; transition: opacity .3s, width .2s; touch-action: none; }
+.rbar.on { opacity: 1; }
+.rbar:hover, .rbar.drag { width: 7px; margin-left: -1.5px; opacity: 1; }
+.rthumb { position: absolute; left: 0; right: 0; top: 0; border-radius: 999px; background: linear-gradient(180deg, #A68CFF, #7C5CFF); box-shadow: 0 0 8px rgba(124, 92, 255, .45); cursor: grab; }
+.rbar.drag .rthumb { cursor: grabbing; }
+:root[data-mode="dark"] .rbar { background: rgba(190, 170, 255, .16); }
 /* volume */
 .rg { flex: none; width: min(180px, 42vw); height: 6px; border-radius: 999px; background: var(--surface2); -webkit-appearance: none; appearance: none; outline: none; }
 .rg::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 2px 8px rgba(80, 50, 200, .45); cursor: pointer; }
