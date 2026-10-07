@@ -16,7 +16,7 @@
   /* carrega as 640 questoes reais so quando preciso */
   P.loadQR = function () {
     if (window.C48_QR) return Promise.resolve(window.C48_QR); if (qrP) return qrP;
-    qrP = new Promise(function (res) { var s = document.createElement('script'); s.src = 'dados/questoes-reais.js'; s.onload = function () { res(window.C48_QR); }; s.onerror = function () { res(null); }; document.head.appendChild(s); }); return qrP;
+    qrP = new Promise(function (res) { var s = document.createElement('script'); s.src = 'dados/questoes-reais.js?v=2'; s.onload = function () { res(window.C48_QR); }; s.onerror = function () { res(null); }; document.head.appendChild(s); }); return qrP;
   };
   function buildPlan(Q) {
     if (plan) return plan;
