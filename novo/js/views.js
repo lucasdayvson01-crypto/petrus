@@ -11,7 +11,7 @@
     var q = m.q ? m.q + (m.q > 1 ? ' questões' : ' questão') + ' na prova' : 'Método de estudo';
     var lines = '<i></i><i></i><i></i><i></i><i></i>';
     return '<a class="folder ' + (cls || '') + '" href="#/materia/' + m.id + '" data-folder="1" style="--h:' + PArt.hueOf(m.id) + '"><span class="fd-back"></span><span class="fd-sheet s1">' + lines + '</span><span class="fd-sheet s2">' + lines + '</span><span class="fd-sheet s3">' + lines + '</span>' +
-      '<span class="fd-front"><span class="cv-ic">' + P.mic(m.id) + '</span>' + (extra ? '<span class="chip fd-chip">' + extra + '</span>' : '') + '<h3>' + esc(m.nome) + '</h3><span class="cv-meta">' + q + ' · ' + P.blocos(m.id).length + ' aulas</span><span class="cv-rp">' + P.rpill(m.id, 'sm') + '</span></span></a>';
+      '<span class="fd-front"><span class="cv-ic">' + P.mic(m.id) + '</span>' + (extra ? '<span class="chip fd-chip">' + extra + '</span>' : '') + '<h3>' + esc(m.nome) + '</h3><span class="cv-meta">' + q + ' · ' + P.blocos(m.id).length + ' aulas</span><span class="cv-num"><b>' + P.matProg(m.id) + '%</b> · ' + P.lidas(m.id) + ' de ' + P.blocos(m.id).length + ' aulas estudadas</span></span></a>';
   }
   function sec(t, more) { return '<div class="sec"><h2>' + t + '</h2>' + (more || '') + '</div>'; }
 

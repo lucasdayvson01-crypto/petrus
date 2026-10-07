@@ -106,8 +106,4 @@
     r.h = r.h.slice(0, k + 10) + html + r.h.slice(k + 10); return r;
   }
   var inicio = V.inicio; V.inicio = function () { var r = inicio.apply(this, arguments); return depoisDoHero(r, '<div class="rp-bar"><span class="rp-cap">Quanto você já estudou até a prova</span>' + P.rpill('all', 'lg') + '</div>'); };
-  var materia = V.materia; V.materia = function (id) {
-    var r = materia.apply(this, arguments), m = P.mat(id); if (!m) return r;
-    return depoisDoHero(r, '<div class="rp-bar"><span class="rp-cap">Seu rendimento em ' + esc(m.nome) + '</span>' + P.rpill(id, 'lg') + '</div>');
-  };
 })();

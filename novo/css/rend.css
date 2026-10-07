@@ -124,3 +124,6 @@
 .rp-twk { position: absolute; width: 14px; height: 14px; background: #D9CBFF; opacity: 0; filter: drop-shadow(0 0 7px #9B7BFF); clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: rptwk 2.6s ease-in-out var(--dl) infinite; }
 @keyframes rptwk { 0%, 100% { transform: scale(0) rotate(0); opacity: 0; } 45% { transform: scale(var(--s)) rotate(40deg); opacity: .95; } 70% { opacity: .5; } }
 :root[data-motion="off"] .rp-fx, :root[data-motion="off"] .rp-tw { display: none; }
+/* números discretos nas pastas da biblioteca */
+.cv-num { display: block; margin-top: 12px; font-size: 12px; color: var(--mut); letter-spacing: .01em; }
+.cv-num b { color: var(--ink); font-weight: 650; }
