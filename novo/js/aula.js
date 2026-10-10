@@ -26,7 +26,7 @@
     if (!wrap || P.S.set.motion === 'off' || !document.startViewTransition || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { location.hash = href; return; }
     if (wrap.classList.contains('glassout')) return;
     wrap.classList.add('glassout');
-    setTimeout(function () { var root = document.documentElement; root.classList.add('vt-glass'); var vt = document.startViewTransition(function () { history.pushState(null, '', href); P.render(); }); var fim = function () { root.classList.remove('vt-glass'); }; vt.ready.catch(function () { }); vt.updateCallbackDone.catch(function () { }); vt.finished.then(fim, fim); }, 620);
+    P.glassTimer = setTimeout(function () { var root = document.documentElement; root.classList.add('vt-glass'); var vt = P.vt = document.startViewTransition(function () { history.pushState(null, '', href); P.render(); }); var fim = function () { root.classList.remove('vt-glass'); }; vt.ready.catch(function () { }); vt.updateCallbackDone.catch(function () { }); vt.finished.then(fim, fim); }, 620);
   });
 
   /* ---------- pagina de UMA aula ---------- */

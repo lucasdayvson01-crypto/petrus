@@ -73,8 +73,13 @@
   /* ---------- gatilhos ---------- */
   var lastFolha = 0;
   function folha(n) { lastFolha = Date.now(); P.som(n || 'folha'); }
-  document.addEventListener('click', function (e) {
+  /* resposta no toque, nao na soltura: com mouse o som sai no pointerdown; com o dedo, no click (o navegador so libera som e vibracao depois do toque) */
+  var lastDown = 0, lastDownEl = null;
+  function gatilho(e) {
     var t = e.target; if (!t || !t.closest) return;
+    if (e.type === 'click' && lastDownEl && lastDownEl.contains && lastDownEl.contains(t) && Date.now() - lastDown < 900) return;
+    if (e.type === 'pointerdown') { if (e.pointerType === 'touch' || e.button !== 0) return; lastDown = Date.now(); lastDownEl = t; }
+    if (e.type === 'click' && e.pointerType === 'touch' && navigator.vibrate && t.closest('button, .btn, a, .chip, .tap, .chk, .sw, .folder, .rpill')) { try { navigator.vibrate(6); } catch (x) {} }
     if (t.closest('[data-rend],[data-rpclose],[data-lmgo],[data-lmclose]')) return;
     var rail = t.closest('.rail a'); if (rail) { var as = Array.prototype.slice.call(document.querySelectorAll('.rail a')); P.somNota = Math.max(0, as.indexOf(rail)); return P.som('nav'); }
     if (t.closest('.folder')) return folha('folha');
@@ -83,7 +88,9 @@
     if (t.closest('.chk, .sw')) return P.som('pop');
     if (t.closest('.qopt')) return; /* o teste decide acerto ou erro */
     if (t.closest('button, .btn, a.card, .tap, .qk, .chip, .wk, a.row, .row.tap')) P.som('tap');
-  }, true);
+  }
+  document.addEventListener('pointerdown', gatilho, true);
+  document.addEventListener('click', gatilho, true);
   window.addEventListener('hashchange', function () {
     if (/^#\/(aula|materia)\//.test(location.hash) && Date.now() - lastFolha > 350) folha('folha');
   });

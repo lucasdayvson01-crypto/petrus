@@ -136,8 +136,8 @@
     if (P.S.set.motion === 'off' || !document.startViewTransition || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
     e.preventDefault(); if (f.classList.contains('opening')) return;
     f.classList.add('opening'); document.body.classList.add('fdopen'); f.style.viewTransitionName = 'matcard';
-    setTimeout(function () {
-      var vt = document.startViewTransition(function () { history.pushState(null, '', href); render(); });
+    P.openTimer = setTimeout(function () {
+      var vt = P.vt = document.startViewTransition(function () { history.pushState(null, '', href); render(); });
       vt.ready.catch(function () { }); vt.updateCallbackDone.catch(function () { }); vt.finished.then(function () { f.style.viewTransitionName = ''; document.body.classList.remove('fdopen'); }, function () { document.body.classList.remove('fdopen'); });
     }, 850);
   });

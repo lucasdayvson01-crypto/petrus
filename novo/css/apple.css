@@ -1,0 +1,72 @@
+/* PETRUS · camada "Design da Apple" (regras do PDF Design-da-Apple, skill de Emil Kowalski, baseada nas palestras da WWDC).
+   Carrega por último. Em vez de mexer em cada arquivo, redefine os tokens que o site inteiro já usa. */
+
+/* 1. Molas no lugar de curvas fixas. Valores do PDF: mover = amortecimento 1.0, resposta 0.4s (sem repique);
+      gaveta e painel = amortecimento 0.8, resposta 0.3s (um respiro de 1,5%). Calculadas com a fisica da mola e escritas em linear(). */
+:root {
+  --mola-mover: linear(0, 0.0374, 0.1233, 0.2298, 0.3404, 0.4456, 0.5409, 0.6241, 0.6952, 0.7547, 0.8039, 0.8442, 0.8767, 0.9029, 0.9238, 0.9404, 0.9536, 0.9639, 0.972, 0.9783, 0.9833, 0.9871, 0.9901, 0.9924, 0.9941, 0.9955, 1);
+  --mola-painel: linear(0, 0.0541, 0.1776, 0.3279, 0.4784, 0.614, 0.7281, 0.8187, 0.8874, 0.9369, 0.9709, 0.9928, 1.0057, 1.0124, 1.015, 1.0149, 1.0134, 1.0112, 1.0089, 1.0067, 1.0048, 1.0033, 1.0021, 1.0013, 1.0006, 1.0002, 1);
+  --ease: var(--mola-mover);
+  --spring: var(--mola-painel);
+  --t-toque: .18s;      /* feedback de toque: imediato */
+  --t-mover: .5s;       /* mover algo */
+  --t-painel: .45s;     /* gaveta, painel, telinha */
+  /* sombras em camadas: uma de contato e uma ampla e suave, como a Apple */
+  --sombra-1: 0 1px 2px rgba(20, 20, 40, .06), 0 10px 28px -14px rgba(40, 30, 100, .28);
+  --sombra-2: 0 2px 4px rgba(20, 20, 40, .06), 0 22px 44px -20px rgba(40, 30, 100, .38);
+  --brilho: inset 0 1px 0 rgba(255, 255, 255, .7);
+  --alvo: 44px;         /* alvo minimo de toque (HIG) */
+}
+:root[data-mode="dark"] { --sombra-1: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px -14px rgba(0, 0, 0, .7); --sombra-2: 0 2px 4px rgba(0, 0, 0, .4), 0 22px 44px -20px rgba(0, 0, 0, .8); --brilho: inset 0 1px 0 rgba(255, 255, 255, .08); }
+
+/* 2. Resposta no toque, nao na soltura: o :active escala no instante em que o dedo ou o mouse encosta (pointerdown),
+      com transicao curta; ao soltar, volta com a mola. Nada espera o clique terminar. */
+.btn, .chip, .ib, .qk, .wk, .tap, .rail a, .seg button, .swatches button, .qopt, .folder, .card.tap, a.row, .row.tap, .rpill, .rpill *, .chk, .sw, .day, .split, .pg a, .pg-nav a, summary {
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.btn:active, .chip:active, .ib:active, .qk:active, .wk:active, .tap:active, .seg button:active, .swatches button:active, .qopt:not(:disabled):active, .card.tap:active, a.row:active, .row.tap:active, .chk:active, .sw:active, .day:active, .split:active, .rail a:active, .rail button.it:active {
+  transform: scale(.965); transition-duration: var(--t-toque); transition-timing-function: cubic-bezier(.2, 0, 0, 1);
+}
+.folder:active { transform: translateY(-1px) scale(.985); transition-duration: var(--t-toque); }
+.rpill:active .rp-glass { transform: scale(.98); transition-duration: var(--t-toque); }
+.btn, .chip, .ib, .qk, .wk, .seg button, .swatches button, .qopt, .card.tap, .chk, .sw { transition-property: transform, background-color, color, box-shadow, opacity; transition-duration: var(--t-mover); transition-timing-function: var(--mola-mover); }
+
+/* 3. Espacamento de letra muda com o tamanho: titulo grande aperta, texto miudo folga. Altura de linha idem. */
+h1 { letter-spacing: -.042em; line-height: 1.04; text-wrap: balance; }
+h2 { letter-spacing: -.03em; line-height: 1.1; text-wrap: balance; }
+h3 { letter-spacing: -.02em; line-height: 1.18; text-wrap: balance; }
+h4 { letter-spacing: -.012em; }
+body { letter-spacing: -.011em; line-height: 1.5; font-optical-sizing: auto; font-feature-settings: "cv11", "ss03", "calt"; }
+p, li, .prose, .nx, .what { text-wrap: pretty; }
+.prose p, .prose li { line-height: 1.62; letter-spacing: -.008em; }
+.tiny, small, .cv-meta, .cv-num, .rp-line small, .lm-sub { letter-spacing: .005em; line-height: 1.4; }
+.eyebrow, .tag, .kbadge, .lm-eyebrow, .rp-eyebrow, .rp-cap { letter-spacing: .09em; }
+.num, .rp-txt b, .rp-big b, .big, .glassb b, .ring b, time { font-variant-numeric: tabular-nums; letter-spacing: -.035em; }
+
+/* 4. Vidro: desfoque + saturacao + filete de luz no topo (o "brilho especular" das camadas translucidas da Apple).
+      Nao animamos o backdrop-filter, so a opacidade e o transform da camada. */
+.rail, .topbar, .bar, .glassb, .rp-card, .lm-card, .seg { box-shadow: var(--sombra-1), var(--brilho); }
+.rail:hover, .rail.open { box-shadow: var(--sombra-2), var(--brilho), 0 0 0 1px rgba(190, 165, 255, .35); }
+.card, .note, .group { box-shadow: var(--sombra-1), var(--brilho); }
+
+/* 5. Telinhas (pilula de rendimento, lei seca) e painel de menu: mola de painel, saem na mesma velocidade em que entram. */
+.rp-wrap, .lm-card { transition-timing-function: var(--mola-painel); }
+.sheet-grab { display: block; width: 38px; height: 5px; border-radius: 999px; background: color-mix(in srgb, var(--mut2) 55%, transparent); margin: -10px auto 14px; cursor: grab; touch-action: none; }
+.sheet-grab:active { cursor: grabbing; }
+.sheet-dragging { transition: none !important; }
+.sheet-back { transition: transform .45s var(--mola-painel), opacity .3s; }
+
+/* 6. Alvos de toque de 44px em telas de toque. */
+@media (pointer: coarse) {
+  .ib, .chk, .rp-x, .lm-x { min-width: var(--alvo); min-height: var(--alvo); }
+  .btn, .chip, .seg button, .rail a, .rail button.it, .qopt, a.row, .row.tap { min-height: var(--alvo); }
+  .chip { display: inline-flex; align-items: center; }
+}
+
+/* 7. Reduzir movimento: sem molas nem deslocamentos, so aparecer e sumir (crossfade). Vale para o ajuste do aparelho e para o do site. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .rp-ov, .lm-ov { transition: opacity .25s !important; -webkit-mask-image: none !important; mask-image: none !important; }
+  .rp-fx, .rp-tw, .bgl svg { display: none !important; }
+}
+:root[data-motion="off"] .rp-fx, :root[data-motion="off"] .rp-tw { display: none !important; }
